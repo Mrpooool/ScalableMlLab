@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+
+# Jupyter / Colab
+.ipynb_checkpoints/
+
+# Datasets & Caches
+data/
+lab1/data/
+lab2/data/
+cifar-10-batches-py/
+*.tar.gz
+*.zip
+
+# Model Checkpoints & Large Artifacts (share via Google Drive + manifest.json)
+checkpoints/
+lab1/checkpoints/
+lab2/checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+artifacts/
+chroma_db/
+*.sqlite3
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
