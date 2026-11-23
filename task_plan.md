@@ -22,15 +22,15 @@
 - [x] 确定优化后的三人分工（A = Task 1+2+底座；B = Task 3+完整 Task 5；C = Task 4+Challenge 2+Task 6+汇总）。
 - [x] 确定目标 Challenge：**Challenge 2 — 跨图像域迁移（CIFAR-10 → STL-10 9 共享类别）**，并冻结 [lab1/docs/experiment_contract.md](lab1/docs/experiment_contract.md) v1.0。
 
-### Phase 1：公共代码底座与 Colab 验证（角色 A 牵头）
-**Status:** `in_progress`
+### Phase 1：公共代码底座与本地/Colab 端到端验证（角色 A 牵头）
+**Status:** `complete`
 
 - [x] 补填公开仓库地址（`https://github.com/Mrpooool/ScalableMlLab.git`）与团队共享 Google Drive 链接（`experiment_contract.md`、`checkpoints_manifest.json`）。
-- [x] 提交默认基线配置 `lab1/configs/baseline.json` 与初始 `lab1/results/checkpoints_manifest.json`。
-- [x] 实现公共模块 `lab1/src/`：`seed.py`、`data.py`（含 `RawImages`、`prepare_inputs`、高速镜像下载与 STL-10 9 类加载器）、`models.py`（手写 `AlexNetCIFAR`、`BasicBlock`、`ResNetCIFAR` 及 `trace_shapes`）、`train.py`（含 `train_eval` 确定性评测、峰值显存、已训练样本数统计）、`metrics.py`、`io_utils.py`，本地静态与跨模块导入校验通过。
-- [x] 创建开箱即用的 Colab 启动与验证 Notebook：`lab1/notebooks/colab_smoke_test.ipynb`。
-- [ ] 在 Colab T4 运行 `colab_smoke_test.ipynb`：完成 1-epoch smoke test（AlexNet & ResNet-18），生成并回传固定划分文件 `lab1/configs/split_indices.json`。
-- [ ] 补填三人姓名映射。
+- [x] 提交默认基线配置 `lab1/configs/baseline.json`、`lab1/requirements.txt` 与初始 `lab1/results/checkpoints_manifest.json`。
+- [x] 实现公共模块 `lab1/src/`（含 `RawImages` 无损张量快路径与双镜像下载）与单元测试 `lab1/tests/test_core.py`（6/6 通过）。
+- [x] 创建本地 GPU / Colab 双环境自适应启动本：`lab1/notebooks/colab_smoke_test.ipynb`。
+- [x] 生成并固化 `lab1/configs/split_indices.json`（45,000 train / 5,000 val，`SPLIT_SEED=2223`，官方 MD5 `c58f30108f718f92721af3b95e74349a` 校验通过）。
+- [x] 在本地 **NVIDIA GeForce RTX 5070 Ti Laptop GPU**（`.venv` Python 3.11.9 + `torch 2.11.0+cu128`）跑通 AlexNet & ResNet-18 1-epoch smoke test。
 
 ### Phase 2：数据探索与双基线模型（角色 A：Task 1 & Task 2）
 **Status:** `pending`

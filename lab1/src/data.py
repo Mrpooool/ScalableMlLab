@@ -17,7 +17,10 @@ from torchvision.transforms import functional as TF
 
 from seed import make_generator, worker_init_fn
 
-CIFAR10_MIRROR_URL = "https://data.brainchip.com/dataset-mirror/cifar10/cifar-10-python.tar.gz"
+CIFAR10_MIRROR_URLS: tuple[str, ...] = (
+    "https://data.brainchip.com/dataset-mirror/cifar10/cifar-10-python.tar.gz",
+    "https://dataset.bj.bcebos.com/cifar/cifar-10-python.tar.gz",
+)
 CIFAR10_FILENAME = "cifar-10-python.tar.gz"
 CIFAR10_MD5 = "c58f30108f718f92721af3b95e74349a"
 
@@ -67,20 +70,23 @@ def load_cifar10_datasets(
     except RuntimeError:
         pass
 
-    try:
-        download_and_extract_archive(
-            CIFAR10_MIRROR_URL,
-            download_root=str(root),
-            filename=CIFAR10_FILENAME,
-            md5=CIFAR10_MD5,
-        )
-        train_ds = datasets.CIFAR10(root, train=True, download=False)
-        test_ds = datasets.CIFAR10(root, train=False, download=False)
-        return train_ds, test_ds
-    except Exception:
-        train_ds = datasets.CIFAR10(root, train=True, download=True)
-        test_ds = datasets.CIFAR10(root, train=False, download=True)
-        return train_ds, test_ds
+    for mirror_url in CIFAR10_MIRROR_URLS:
+        try:
+            download_and_extract_archive(
+                mirror_url,
+                download_root=str(root),
+                filename=CIFAR10_FILENAME,
+                md5=CIFAR10_MD5,
+            )
+            train_ds = datasets.CIFAR10(root, train=True, download=False)
+            test_ds = datasets.CIFAR10(root, train=False, download=False)
+            return train_ds, test_ds
+        except Exception:
+            continue
+
+    train_ds = datasets.CIFAR10(root, train=True, download=True)
+    test_ds = datasets.CIFAR10(root, train=False, download=True)
+    return train_ds, test_ds
 
 
 def compute_train_stats(
@@ -153,7 +159,11 @@ def get_or_create_split(
 
 
 class RawImages(Dataset):
-    """Dataset wrapper returning raw [0, 1] CHW tensor, integer label, and original image ID."""
+    """Dataset wrapper returning raw [0, 1] CHW tensor, integer label, and original image ID.
+
+    Uses a bit-exact uint8->CHW fast path for numpy-backed datasets (e.g. torchvision CIFAR10)
+    when no PIL transform is requested, avoiding redundant NumPy->PIL->Tensor conversions.
+    """
 
     def __init__(
         self,
@@ -167,18 +177,38 @@ class RawImages(Dataset):
         self.pil_transform = pil_transform
         self.tensor_transform = tensor_transform
 
+        self._fast_images: torch.Tensor | None = None
+        self._fast_targets: list[int] | None = None
+        if (
+            pil_transform is None
+            and hasattr(dataset, "data")
+            and hasattr(dataset, "targets")
+            and isinstance(dataset.data, np.ndarray)
+            and dataset.data.ndim == 4
+            and dataset.data.dtype == np.uint8
+        ):
+            # [N, H, W, C] uint8 -> contiguous [N, C, H, W] uint8 in RAM (~150 MB for CIFAR-10).
+            self._fast_images = torch.from_numpy(dataset.data).permute(0, 3, 1, 2).contiguous()
+            self._fast_targets = [int(t) for t in dataset.targets]
+
     def __len__(self) -> int:
         return len(self.ids)
 
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, int, int]:
         image_id = self.ids[idx]
-        image, target = self.dataset[image_id]
-        if self.pil_transform is not None:
-            image = self.pil_transform(image)
-        tensor = TF.to_tensor(image) if not isinstance(image, torch.Tensor) else image
+        if self._fast_images is not None and self._fast_targets is not None:
+            tensor = self._fast_images[image_id].to(dtype=torch.float32).div_(255.0)
+            target = self._fast_targets[image_id]
+        else:
+            image, target = self.dataset[image_id]
+            if self.pil_transform is not None:
+                image = self.pil_transform(image)
+            tensor = TF.to_tensor(image) if not isinstance(image, torch.Tensor) else image
+            target = int(target)
+
         if self.tensor_transform is not None:
             tensor = self.tensor_transform(tensor)
-        return tensor, int(target), image_id
+        return tensor, target, image_id
 
 
 def prepare_inputs(

@@ -21,6 +21,7 @@ cifar-10-batches-py/
 checkpoints/
 lab1/checkpoints/
 lab2/checkpoints/
+lab1/results/smoke_test/
 *.pt
 *.pth
 *.ckpt
