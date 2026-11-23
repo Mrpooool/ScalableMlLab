@@ -10,13 +10,14 @@
 ## 1. 运行环境与共享存储约定（Colab T4）
 
 - **标准基准硬件**：Google Colab 免费 **NVIDIA Tesla T4**（默认 `fp32`；每次运行自动写入 `environment.device_name`）。
-- **代码来源**：在 Colab 中 `git clone` 本仓库并将 `lab1/src/` 加入 `sys.path`；Notebook 仅做环境初始化、调用 `src/` 与展示图表。
+- **代码来源**：公开 GitHub 仓库 `https://github.com/Mrpooool/ScalableMlLab.git`，在 Colab 中 `git clone` 并将 `lab1/src/` 加入 `sys.path`；Notebook 仅做环境初始化、调用 `src/` 与展示图表。
 - **数据集下载**：
   - CIFAR-10：优先使用 Part A1 镜像 `https://data.brainchip.com/dataset-mirror/cifar10/cifar-10-python.tar.gz`（md5 `c58f30108f718f92721af3b95e74349a`），失败回退官方源。
   - STL-10（仅 Challenge 2 评测阶段使用）：`torchvision.datasets.STL10(root=..., split="test", download=True)`。
 - **共享权重路径（Google Drive）**：
-  - 挂载 `/content/drive/MyDrive/<TEAM_SHARED_FOLDER>/lab1/`（Phase 1 补填实际共享目录名）
-  - 子目录约定：`data/`、`checkpoints/<exp_id>/best.pt`、`cache/`
+  - 团队共享文件夹链接：`https://drive.google.com/drive/folders/1eRebAfEqnmBqUf3MgwX3NlcAFC54Izzp?usp=sharing`（队友添加到「我的云端硬盘」快捷方式后路径统一）
+  - 挂载路径：`/content/drive/MyDrive/ScalableMlLab/lab1/`（若云端硬盘中文件夹名不同，在 Notebook 顶部调整 `DRIVE_FOLDER_NAME`）
+  - 子目录约定：`data/`、`checkpoints/<exp_id>/best.pt`、`results/`、`configs/`
 - **版本锁定交接**：任何被下游复用的模型权重，必须在仓库内 `lab1/results/checkpoints_manifest.json` 登记精确路径、代码 commit 和验证指标后才算正式交接。
 
 ---

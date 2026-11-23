@@ -23,12 +23,14 @@
 - [x] 确定目标 Challenge：**Challenge 2 — 跨图像域迁移（CIFAR-10 → STL-10 9 共享类别）**，并冻结 [lab1/docs/experiment_contract.md](lab1/docs/experiment_contract.md) v1.0。
 
 ### Phase 1：公共代码底座与 Colab 验证（角色 A 牵头）
-**Status:** `pending`
+**Status:** `in_progress`
 
-- [ ] 补填三人姓名映射与共享 Google Drive 路径（`experiment_contract.md`）。
-- [ ] 生成并提交 `lab1/configs/split_indices.json`（`SPLIT_SEED=2223`，45k/5k 索引 + train-only RGB 均值/标准差）与默认配置 `lab1/configs/baseline.json`。
-- [ ] 实现并 smoke test 公共模块 `lab1/src/`：`seed.py`、`data.py`（含 `RawImages`、`prepare_inputs`、快速镜像下载）、`models.py`（手写 `AlexNetCIFAR`、`BasicBlock`、`ResNet18CIFAR` 及 `trace_shapes`）、`train.py`（含 `train_eval` 确定性评测、峰值显存、已训练样本数统计）、`metrics.py`、`io_utils.py`。
-- [ ] 在 Colab T4 跑通 1 epoch smoke test（挂 Drive → 调 `src/` → 落盘 `results/<exp_id>.json` & checkpoint）。
+- [x] 补填公开仓库地址（`https://github.com/Mrpooool/ScalableMlLab.git`）与团队共享 Google Drive 链接（`experiment_contract.md`、`checkpoints_manifest.json`）。
+- [x] 提交默认基线配置 `lab1/configs/baseline.json` 与初始 `lab1/results/checkpoints_manifest.json`。
+- [x] 实现公共模块 `lab1/src/`：`seed.py`、`data.py`（含 `RawImages`、`prepare_inputs`、高速镜像下载与 STL-10 9 类加载器）、`models.py`（手写 `AlexNetCIFAR`、`BasicBlock`、`ResNetCIFAR` 及 `trace_shapes`）、`train.py`（含 `train_eval` 确定性评测、峰值显存、已训练样本数统计）、`metrics.py`、`io_utils.py`，本地静态与跨模块导入校验通过。
+- [x] 创建开箱即用的 Colab 启动与验证 Notebook：`lab1/notebooks/colab_smoke_test.ipynb`。
+- [ ] 在 Colab T4 运行 `colab_smoke_test.ipynb`：完成 1-epoch smoke test（AlexNet & ResNet-18），生成并回传固定划分文件 `lab1/configs/split_indices.json`。
+- [ ] 补填三人姓名映射。
 
 ### Phase 2：数据探索与双基线模型（角色 A：Task 1 & Task 2）
 **Status:** `pending`

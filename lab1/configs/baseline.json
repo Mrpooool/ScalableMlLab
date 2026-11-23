@@ -1,0 +1,37 @@
+{
+  "split_seed": 2223,
+  "val_ratio": 0.1,
+  "default_seed": 42,
+  "batch_size": 128,
+  "epochs": 30,
+  "baselines": {
+    "alexnet_cifar": {
+      "model": "alexnet_cifar",
+      "model_options": {
+        "dropout": 0.5,
+        "width_mult": 1.0,
+        "fc_hidden1": 1024,
+        "fc_hidden2": 512,
+        "use_bn": false
+      },
+      "optimizer": "sgd",
+      "lr": 0.01,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "scheduler": "cosine"
+    },
+    "resnet18_cifar": {
+      "model": "resnet18_cifar",
+      "model_options": {
+        "layers": [2, 2, 2, 2],
+        "base_width": 64,
+        "dropout": 0.0
+      },
+      "optimizer": "sgd",
+      "lr": 0.1,
+      "momentum": 0.9,
+      "weight_decay": 0.0005,
+      "scheduler": "cosine"
+    }
+  }
+}
