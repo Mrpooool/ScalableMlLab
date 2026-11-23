@@ -2,5 +2,28 @@
   "version": "1.0",
   "drive_folder_url": "https://drive.google.com/drive/folders/1eRebAfEqnmBqUf3MgwX3NlcAFC54Izzp?usp=sharing",
   "drive_root": "/content/drive/MyDrive/ScalableMlLab/lab1",
-  "checkpoints": []
+  "checkpoints": [
+    {
+      "exp_id": "t2_alexnet_cifar_baseline_s42",
+      "model": "alexnet_cifar",
+      "owner": "role_a",
+      "git_commit": "b1f9a7e",
+      "drive_rel_path": "checkpoints/t2_alexnet_cifar_baseline_s42/best.pt",
+      "best_epoch": 24,
+      "best_val_acc": 0.83,
+      "clean_test_acc": 0.8214,
+      "notes": "Task 2 baseline alexnet_cifar (30 epochs, no augmentation)"
+    },
+    {
+      "exp_id": "t2_resnet18_cifar_baseline_s42",
+      "model": "resnet18_cifar",
+      "owner": "role_a",
+      "git_commit": "b1f9a7e",
+      "drive_rel_path": "checkpoints/t2_resnet18_cifar_baseline_s42/best.pt",
+      "best_epoch": 28,
+      "best_val_acc": 0.873,
+      "clean_test_acc": 0.8701,
+      "notes": "Task 2 baseline resnet18_cifar (30 epochs, no augmentation)"
+    }
+  ]
 }

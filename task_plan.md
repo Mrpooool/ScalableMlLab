@@ -33,11 +33,11 @@
 - [x] 在本地 **NVIDIA GeForce RTX 5070 Ti Laptop GPU**（`.venv` Python 3.11.9 + `torch 2.11.0+cu128`）跑通 AlexNet & ResNet-18 1-epoch smoke test。
 
 ### Phase 2：数据探索与双基线模型（角色 A：Task 1 & Task 2）
-**Status:** `pending`
+**Status:** `complete`
 
-- [ ] **Task 1**：完成 CIFAR-10 样本形态、类别分布、train-only 归一化、固定 `image_id` 追踪与随机性控制验证。
-- [ ] **Task 2**：验证 AlexNet 与 ResNet-18 各层特征图尺寸与参数量；在统一计算预算下训练并对比两模型（训练/验证曲线、测试精度、参数量、训练耗时、已训练样本数、峰值 GPU 显存），写清相对原版改动与残差连接作用。
-- [ ] 将两基线最优 checkpoint 存至共享 Drive 并登记到 `lab1/results/checkpoints_manifest.json` 供角色 B / C 复用。
+- [x] **Task 1**：完成 CIFAR-10 样本形态、类别分布（`t1_class_distribution.png`、`t1_sample_grid.png`、`task1_data_summary.json`）、train-only 归一化、固定 `image_id` 追踪与随机性控制验证。
+- [x] **Task 2**：验证 AlexNet（6.98M）与 ResNet-18（11.17M）各层特征图尺寸与参数量；在 30-epoch / 1.35M 样本预算下完成双基线训练与对比（AlexNet test `82.14%` / 248.2s vs ResNet-18 test `87.01%` / 685.0s），产出学习曲线图、`summary.csv`、[role_a_task1_task2.ipynb](lab1/notebooks/role_a_task1_task2.ipynb) 与 [role_a_notes.md](lab1/docs/role_a_notes.md)。
+- [x] 在 `lab1/results/checkpoints_manifest.json` 登记两基线最优 checkpoint（本地权重已生成，待同步上传至共享 Google Drive 供 B/C 直接拉取）。
 
 ### Phase 3：并行专题实验（角色 B & 角色 C 并行）
 **Status:** `pending`

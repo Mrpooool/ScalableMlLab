@@ -1,0 +1,87 @@
+{
+  "dataset": "CIFAR-10",
+  "image_shape_hwc": [
+    32,
+    32,
+    3
+  ],
+  "dtype": "uint8",
+  "pixel_min": 0,
+  "pixel_max": 255,
+  "split_seed": 2223,
+  "val_ratio": 0.1,
+  "counts": {
+    "official_train_total": 50000,
+    "train_split": 45000,
+    "val_split": 5000,
+    "official_test": 10000
+  },
+  "class_distribution": {
+    "airplane": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "automobile": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "bird": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "cat": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "deer": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "dog": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "frog": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "horse": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "ship": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    },
+    "truck": {
+      "train": 4500,
+      "val": 500,
+      "test": 1000
+    }
+  },
+  "train_only_stats": {
+    "mean": [
+      0.49131782415917735,
+      0.4821799621289491,
+      0.44638928010961343
+    ],
+    "std": [
+      0.24700136949747817,
+      0.24340077634253668,
+      0.26154419981672744
+    ]
+  },
+  "figures": {
+    "class_distribution": "lab1/results/figures/t1_class_distribution.png",
+    "sample_grid": "lab1/results/figures/t1_sample_grid.png"
+  }
+}

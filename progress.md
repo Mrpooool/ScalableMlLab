@@ -1,6 +1,17 @@
 # 项目进度
 
-更新：2026-11-23。**Lab 1 Phase 1 已全部完成并实测通过（本地 RTX 5070 Ti Laptop GPU + `.venv` Python 3.11.9 / `torch 2.11.0+cu128`），固定划分 `split_indices.json` 已固化提交；下一步进入 Phase 2（Task 1 数据探索 & Task 2 双基线 30-epoch 正式训练）。**
+更新：2026-11-23。**Lab 1 Phase 2（角色 A：Task 1 & Task 2）已完成并实测通过；AlexNet（test 82.14%）与 ResNet-18（test 87.01%）30-epoch 基线结果、图表与交接清单已落盘；下一步进入 Phase 3（角色 B Task 3/5 与角色 C Task 4/Challenge 2 并行推进）。**
+
+## 2026-11-23：Phase 2 完成 — Task 1 数据探索与 Task 2 双模型 30-Epoch 正式基线
+
+- 在 [lab1/src/data.py](lab1/src/data.py) 新增无损批量张量迭代器 `TensorBatchLoader`，将 AlexNet 单 epoch 耗时从 28.97s 降至 **8.28s**；[lab1/tests/test_core.py](lab1/tests/test_core.py) 扩展至 **7/7 通过**（1.13s）。
+- 新增 [lab1/src/plots.py](lab1/src/plots.py)、[lab1/src/run_phase2_baselines.py](lab1/src/run_phase2_baselines.py)、[lab1/notebooks/role_a_task1_task2.ipynb](lab1/notebooks/role_a_task1_task2.ipynb) 与 [lab1/docs/role_a_notes.md](lab1/docs/role_a_notes.md)。
+- **Task 1 产出**：[lab1/results/task1_data_summary.json](lab1/results/task1_data_summary.json) 及分布/样例图（`lab1/results/figures/t1_*.png`），确认 10 类完全均衡（4,500/500/1,000 per class）。
+- **Task 2 正式 30-Epoch 实测结果**（`NVIDIA GeForce RTX 5070 Ti Laptop GPU`，FP32，`bs=128`，`seed=42`，无数据增强，`1,350,000` trained samples）：
+  - `t2_alexnet_cifar_baseline_s42`（6.98M params，`lr=0.01`）：Best Val `83.00%`（ep 24，CE `0.903`），**Clean Test `82.14%`**（CE `0.931`，Macro F1 `0.8205`），训练耗时 `248.2s`，峰值显存 `316.1 MB`，推理 `bs=1: 3.06 ms` / `bs=128: 41,854 imgs/s`，权重 `26.62 MB`。
+  - `t2_resnet18_cifar_baseline_s42`（11.17M params，`lr=0.1`）：Best Val `87.30%`（ep 28，CE `0.422`），**Clean Test `87.01%`**（CE `0.436`，Macro F1 `0.8698`），训练耗时 `685.0s`，峰值显存 `834.6 MB`，推理 `bs=1: 11.63 ms` / `bs=128: 11,405 imgs/s`，权重 `42.70 MB`。
+- 已更新 [lab1/results/checkpoints_manifest.json](lab1/results/checkpoints_manifest.json)、[lab1/results/summary.csv](lab1/results/summary.csv) 及 Task 2 学习曲线/对比图（`lab1/results/figures/t2_*.png`）。
+- **交接提醒**：两份 `best.pt` 位于本地 `lab1/checkpoints/`（已忽略不上 Git），需同步上传至共享 Google Drive 供 B/C 复用。
 
 ## 2026-11-23：Phase 1 完成 — 本地 GPU 环境搭建、单元测试与 1-epoch Smoke Test 实测
 

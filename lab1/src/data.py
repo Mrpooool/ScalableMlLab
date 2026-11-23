@@ -232,6 +232,79 @@ def prepare_inputs(
     return (resized - mean) / std
 
 
+class TensorBatchLoader:
+    """Fast, bit-exact batch iterator for uint8 numpy-backed datasets (e.g., CIFAR-10).
+
+    Slices contiguous [N, C, H, W] uint8 tensors by batch directly, avoiding per-sample
+    Python __getitem__ + default_collate overhead while preserving exact (raw, targets, ids)
+    output semantics and deterministic per-epoch shuffling.
+    """
+
+    def __init__(
+        self,
+        images_chw_uint8: torch.Tensor,
+        targets: torch.Tensor,
+        ids: torch.Tensor,
+        batch_size: int = 128,
+        shuffle: bool = False,
+        seed: int = 42,
+    ) -> None:
+        self.images = images_chw_uint8
+        self.targets = targets
+        self.ids = ids
+        self.batch_size = int(batch_size)
+        self.shuffle = bool(shuffle)
+        self.generator = make_generator(seed) if shuffle else None
+
+    def __len__(self) -> int:
+        n = len(self.ids)
+        return (n + self.batch_size - 1) // self.batch_size
+
+    def __iter__(self):
+        n = len(self.ids)
+        if self.shuffle:
+            order = torch.randperm(n, generator=self.generator)
+        else:
+            order = torch.arange(n)
+
+        for start in range(0, n, self.batch_size):
+            batch_idx = order[start : start + self.batch_size]
+            raw = self.images[batch_idx].to(dtype=torch.float32).div_(255.0)
+            yield raw, self.targets[batch_idx], self.ids[batch_idx]
+
+
+def _can_use_fast_loader(dataset: Dataset) -> bool:
+    return (
+        hasattr(dataset, "data")
+        and hasattr(dataset, "targets")
+        and isinstance(dataset.data, np.ndarray)
+        and dataset.data.ndim == 4
+        and dataset.data.dtype == np.uint8
+    )
+
+
+def _build_fast_loader(
+    dataset: Dataset,
+    ids: Sequence[int] | None,
+    batch_size: int,
+    shuffle: bool,
+    seed: int = 42,
+) -> TensorBatchLoader:
+    idx_list = list(range(len(dataset))) if ids is None else [int(i) for i in ids]
+    idx_arr = np.asarray(idx_list, dtype=np.int64)
+    imgs = torch.from_numpy(dataset.data[idx_arr]).permute(0, 3, 1, 2).contiguous()
+    targets = torch.tensor([int(dataset.targets[i]) for i in idx_list], dtype=torch.long)
+    id_tensor = torch.tensor(idx_list, dtype=torch.long)
+    return TensorBatchLoader(
+        images_chw_uint8=imgs,
+        targets=targets,
+        ids=id_tensor,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        seed=seed,
+    )
+
+
 def make_loaders(
     train_dataset: Dataset,
     test_dataset: Dataset,
@@ -243,8 +316,8 @@ def make_loaders(
     train_tensor_transform: Callable | None = None,
     num_workers: int = 2,
     pin_memory: bool | None = None,
-) -> dict[str, DataLoader]:
-    """Create train, deterministic train_eval, val, and test DataLoaders."""
+) -> dict[str, Any]:
+    """Create train, deterministic train_eval, val, and test batch loaders."""
     if pin_memory is None:
         pin_memory = torch.cuda.is_available()
 
@@ -256,8 +329,17 @@ def make_loaders(
     if num_workers > 0:
         common_kwargs["worker_init_fn"] = worker_init_fn
 
-    return {
-        "train": DataLoader(
+    use_fast_train = (
+        train_pil_transform is None
+        and train_tensor_transform is None
+        and _can_use_fast_loader(train_dataset)
+    )
+    if use_fast_train:
+        train_loader: Any = _build_fast_loader(
+            train_dataset, train_ids, batch_size=batch_size, shuffle=True, seed=seed
+        )
+    else:
+        train_loader = DataLoader(
             RawImages(
                 train_dataset,
                 train_ids,
@@ -267,22 +349,29 @@ def make_loaders(
             shuffle=True,
             generator=make_generator(seed),
             **common_kwargs,
-        ),
-        "train_eval": DataLoader(
-            RawImages(train_dataset, train_ids),
-            shuffle=False,
-            **common_kwargs,
-        ),
-        "val": DataLoader(
-            RawImages(train_dataset, val_ids),
-            shuffle=False,
-            **common_kwargs,
-        ),
-        "test": DataLoader(
-            RawImages(test_dataset),
-            shuffle=False,
-            **common_kwargs,
-        ),
+        )
+
+    train_eval_loader: Any = (
+        _build_fast_loader(train_dataset, train_ids, batch_size=batch_size, shuffle=False)
+        if _can_use_fast_loader(train_dataset)
+        else DataLoader(RawImages(train_dataset, train_ids), shuffle=False, **common_kwargs)
+    )
+    val_loader: Any = (
+        _build_fast_loader(train_dataset, val_ids, batch_size=batch_size, shuffle=False)
+        if _can_use_fast_loader(train_dataset)
+        else DataLoader(RawImages(train_dataset, val_ids), shuffle=False, **common_kwargs)
+    )
+    test_loader: Any = (
+        _build_fast_loader(test_dataset, None, batch_size=batch_size, shuffle=False)
+        if _can_use_fast_loader(test_dataset)
+        else DataLoader(RawImages(test_dataset), shuffle=False, **common_kwargs)
+    )
+
+    return {
+        "train": train_loader,
+        "train_eval": train_eval_loader,
+        "val": val_loader,
+        "test": test_loader,
     }
 
 

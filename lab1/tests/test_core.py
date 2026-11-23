@@ -20,6 +20,7 @@ from data import (  # noqa: E402
     CIFAR10_SHARED_9_IDS,
     RawImages,
     STL10_TO_CIFAR10,
+    TensorBatchLoader,
     prepare_inputs,
 )
 from io_utils import aggregate_results_to_csv, load_json, register_checkpoint, save_json  # noqa: E402
@@ -94,6 +95,23 @@ class Lab1CoreTests(unittest.TestCase):
         self.assertEqual(image_id, 4)
         self.assertGreaterEqual(float(tensor.min()), 0.0)
         self.assertLessEqual(float(tensor.max()), 1.0)
+
+    def test_tensor_batch_loader_deterministic_and_exact(self) -> None:
+        imgs = torch.randint(0, 256, (10, 3, 32, 32), dtype=torch.uint8)
+        targets = torch.arange(10, dtype=torch.long)
+        ids = torch.arange(100, 110, dtype=torch.long)
+        loader_a = TensorBatchLoader(imgs, targets, ids, batch_size=4, shuffle=True, seed=42)
+        loader_b = TensorBatchLoader(imgs, targets, ids, batch_size=4, shuffle=True, seed=42)
+        batches_a = list(loader_a)
+        batches_b = list(loader_b)
+        self.assertEqual(len(batches_a), 3)
+        for (ra, ta, ia), (rb, tb, ib) in zip(batches_a, batches_b):
+            self.assertTrue(torch.equal(ra, rb))
+            self.assertTrue(torch.equal(ta, tb))
+            self.assertTrue(torch.equal(ia, ib))
+            self.assertEqual(ra.dtype, torch.float32)
+            self.assertGreaterEqual(float(ra.min()), 0.0)
+            self.assertLessEqual(float(ra.max()), 1.0)
 
     def test_stl10_label_mapping_and_shared9_metrics(self) -> None:
         self.assertEqual(len(STL10_TO_CIFAR10), 9)

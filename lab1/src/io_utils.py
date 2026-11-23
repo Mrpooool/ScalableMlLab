@@ -121,6 +121,8 @@ def aggregate_results_to_csv(results_dir: str | Path, out_csv: str | Path) -> li
         if json_path.name == "checkpoints_manifest.json":
             continue
         data = load_json(json_path)
+        if "exp_id" not in data:
+            continue
         cfg = data.get("config", {})
         env = data.get("environment", {})
         stats = data.get("model_stats", {})

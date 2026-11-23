@@ -1,0 +1,81 @@
+{
+  "exp_id": "t2_resnet18_cifar_baseline_s42",
+  "task": "task2",
+  "owner": "role_a",
+  "git_commit": "b1f9a7e",
+  "timestamp_utc": "2026-11-23T15:58:55Z",
+  "environment": {
+    "platform": "local",
+    "device_name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "precision": "fp32",
+    "torch_version": "2.11.0+cu128",
+    "cuda_version": "12.8"
+  },
+  "config": {
+    "exp_id": "t2_resnet18_cifar_baseline_s42",
+    "task": "task2",
+    "owner": "role_a",
+    "model": "resnet18_cifar",
+    "model_options": {
+      "layers": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "base_width": 64,
+      "dropout": 0.0
+    },
+    "seed": 42,
+    "epochs": 30,
+    "batch_size": 128,
+    "optimizer": "sgd",
+    "lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "scheduler": "cosine",
+    "augmentation": "none",
+    "eval_train_every": 1,
+    "precision": "fp32",
+    "notes": "Task 2 baseline resnet18_cifar (30 epochs, no augmentation)",
+    "dropout": 0.0
+  },
+  "model_stats": {
+    "total_params": 11173962,
+    "trainable_params": 11173962,
+    "checkpoint_size_mb": 42.695
+  },
+  "training": {
+    "num_trained_samples": 1350000,
+    "total_train_time_sec": 684.971,
+    "avg_epoch_time_sec": 22.832,
+    "peak_gpu_mem_mb": 834.62,
+    "best_epoch": 28,
+    "best_val_acc": 0.873,
+    "best_val_ce": 0.4222644446849823,
+    "final_train_eval_acc": 1.0,
+    "final_train_eval_ce": 0.0012131250489089225,
+    "history_file": "lab1/results/histories/t2_resnet18_cifar_baseline_s42.csv"
+  },
+  "evaluation": {
+    "clean_test_acc": 0.8701,
+    "clean_test_ce": 0.4357294679641724,
+    "macro_f1": 0.8697973512760854,
+    "corrupted_metrics": {},
+    "adversarial_metrics": {},
+    "challenge2_stl10": {}
+  },
+  "inference_benchmark": {
+    "device_name": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "precision": "fp32",
+    "bs1_latency_ms": 11.627853999962099,
+    "bs128_latency_ms_per_batch": 11.223419999878388,
+    "bs128_throughput_imgs_per_sec": 11404.723337573301,
+    "warmup_runs": 10,
+    "measured_runs": 50
+  },
+  "checkpoint_ref": {
+    "drive_rel_path": "checkpoints/t2_resnet18_cifar_baseline_s42/best.pt",
+    "is_registered_in_manifest": true
+  }
+}
