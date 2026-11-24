@@ -1,0 +1,214 @@
+{
+  "exp_id": "t6_resnet18_cifar_crop_flip_s123",
+  "task": "task6",
+  "owner": "role_c",
+  "git_commit": "unknown",
+  "timestamp_utc": "2026-11-24T18:31:23Z",
+  "environment": {
+    "platform": "colab",
+    "device_name": "Tesla T4",
+    "precision": "fp32",
+    "torch_version": "2.14.1+cu130",
+    "cuda_version": "13.0"
+  },
+  "config": {
+    "exp_id": "t6_resnet18_cifar_crop_flip_s123",
+    "task": "task6",
+    "owner": "role_c",
+    "model": "resnet18_cifar",
+    "model_options": {
+      "layers": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "base_width": 64,
+      "dropout": 0.0
+    },
+    "seed": 123,
+    "epochs": 30,
+    "batch_size": 128,
+    "optimizer": "sgd",
+    "lr": 0.1,
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "scheduler": "cosine",
+    "augmentation": "crop32_pad4_hflip05",
+    "eval_train_every": 1,
+    "precision": "fp32",
+    "notes": "Role C task6 frozen T4 matrix row (resnet18_cifar, seed 123, aug crop32_pad4_hflip05)",
+    "dropout": 0.0
+  },
+  "model_stats": {
+    "total_params": 11173962,
+    "trainable_params": 11173962,
+    "checkpoint_size_mb": 42.695
+  },
+  "training": {
+    "num_trained_samples": 1350000,
+    "total_train_time_sec": 1856.025,
+    "avg_epoch_time_sec": 61.867,
+    "peak_gpu_mem_mb": 802.99,
+    "best_epoch": 29,
+    "best_val_acc": 0.9336,
+    "best_val_ce": 0.22882847347259522,
+    "final_train_eval_acc": 0.9962888888888889,
+    "final_train_eval_ce": 0.016263915601703857,
+    "history_file": "lab1/results/histories/t6_resnet18_cifar_crop_flip_s123.csv"
+  },
+  "evaluation": {
+    "clean_test_acc": 0.9292,
+    "clean_test_ce": 0.24506236867904663,
+    "macro_f1": 0.9291521404940479,
+    "corrupted_metrics": {
+      "clean": {
+        "accuracy": 0.9292,
+        "ce": 0.24506236867904663,
+        "macro_f1": 0.9291521404940479,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.955,
+          "automobile": 0.963,
+          "bird": 0.917,
+          "cat": 0.843,
+          "deer": 0.941,
+          "dog": 0.881,
+          "frog": 0.944,
+          "horse": 0.941,
+          "ship": 0.961,
+          "truck": 0.946
+        },
+        "evaluation_time_sec": 1.4300571529893205
+      },
+      "rotation_15deg": {
+        "accuracy": 0.8795,
+        "ce": 0.4111879359960556,
+        "macro_f1": 0.8813705487598501,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.88,
+          "automobile": 0.955,
+          "bird": 0.844,
+          "cat": 0.837,
+          "deer": 0.857,
+          "dog": 0.872,
+          "frog": 0.857,
+          "horse": 0.892,
+          "ship": 0.91,
+          "truck": 0.891
+        },
+        "evaluation_time_sec": 1.4314312180504203,
+        "accuracy_drop_vs_clean": 0.04970000000000008,
+        "prediction_flip_rate_vs_clean": 0.0948,
+        "clean_correct_to_wrong_count": 666,
+        "clean_correct_to_wrong_rate": 0.07167455876022384
+      },
+      "translation_3px": {
+        "accuracy": 0.9253,
+        "ce": 0.2459922896385193,
+        "macro_f1": 0.925294328778049,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.946,
+          "automobile": 0.966,
+          "bird": 0.904,
+          "cat": 0.84,
+          "deer": 0.94,
+          "dog": 0.884,
+          "frog": 0.94,
+          "horse": 0.933,
+          "ship": 0.953,
+          "truck": 0.947
+        },
+        "evaluation_time_sec": 1.4284491720609367,
+        "accuracy_drop_vs_clean": 0.0039000000000000146,
+        "prediction_flip_rate_vs_clean": 0.0386,
+        "clean_correct_to_wrong_count": 184,
+        "clean_correct_to_wrong_rate": 0.019801980198019802
+      },
+      "gaussian_noise_std_0_05": {
+        "accuracy": 0.6615,
+        "ce": 1.4568802759170532,
+        "macro_f1": 0.6714725699462256,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.533,
+          "automobile": 0.69,
+          "bird": 0.833,
+          "cat": 0.619,
+          "deer": 0.751,
+          "dog": 0.406,
+          "frog": 0.946,
+          "horse": 0.548,
+          "ship": 0.614,
+          "truck": 0.675
+        },
+        "evaluation_time_sec": 1.4237999940523878,
+        "accuracy_drop_vs_clean": 0.26770000000000005,
+        "prediction_flip_rate_vs_clean": 0.3253,
+        "clean_correct_to_wrong_count": 2832,
+        "clean_correct_to_wrong_rate": 0.3047783039173483
+      }
+    },
+    "adversarial_metrics": {},
+    "challenge2_stl10": {
+      "num_cifar10_shared9": 9000,
+      "num_stl10": 7200,
+      "cifar10_test_9way_acc": 0.9312222222222222,
+      "stl10_10way_acc": 0.7993055555555556,
+      "stl10_frog_leakage_rate": 0.01888888888888889,
+      "stl10_9way_masked_acc": 0.8093055555555555,
+      "stl10_9way_macro_f1": 0.8074437928712322,
+      "domain_drop_9way": 0.12191666666666667,
+      "per_class_cifar10_9way_acc": {
+        "airplane": 0.955,
+        "automobile": 0.964,
+        "bird": 0.927,
+        "cat": 0.857,
+        "deer": 0.944,
+        "dog": 0.885,
+        "horse": 0.941,
+        "ship": 0.962,
+        "truck": 0.946
+      },
+      "per_class_stl10_9way_acc": {
+        "airplane": 0.85625,
+        "automobile": 0.885,
+        "bird": 0.8575,
+        "cat": 0.64625,
+        "deer": 0.91125,
+        "dog": 0.6175,
+        "horse": 0.78875,
+        "ship": 0.9275,
+        "truck": 0.79375
+      },
+      "per_class_domain_drop_9way": {
+        "airplane": 0.09875,
+        "automobile": 0.07899999999999996,
+        "bird": 0.0695,
+        "cat": 0.21075,
+        "deer": 0.032749999999999946,
+        "dog": 0.26749999999999996,
+        "horse": 0.15225,
+        "ship": 0.034499999999999975,
+        "truck": 0.15225
+      }
+    },
+    "prediction_file": "lab1/results/predictions/t6_resnet18_cifar_crop_flip_s123.npz",
+    "corruption_config_sha256": "b21f3606af784affd5b38909a6c59eb7b65bca1f7785d6fe55ff22591dd8edd3"
+  },
+  "inference_benchmark": {
+    "device_name": "NVIDIA RTX 2000 Ada Generation",
+    "precision": "fp32",
+    "bs1_latency_ms": 0.849120260681957,
+    "bs128_latency_ms_per_batch": 16.892198380082846,
+    "bs128_throughput_imgs_per_sec": 7577.462513755551,
+    "warmup_runs": 10,
+    "measured_runs": 50
+  },
+  "checkpoint_ref": {
+    "drive_rel_path": "checkpoints/t6_resnet18_cifar_crop_flip_s123/best.pt",
+    "is_registered_in_manifest": true
+  }
+}

@@ -1,6 +1,6 @@
 # 项目执行方案（Lab 1）
 
-更新：2026-11-21。当前任务依据：[Lab Assignment 1.docx.md](Lab%20Assignment%201.docx.md) 与官方模板 [ID2223_Lab_Session_2.ipynb](lab1/notebooks/ID2223_Lab_Session_2.ipynb)（Part A9 & Part B）。
+更新：2026-11-24。当前任务依据：[Lab Assignment 1.docx.md](Lab%20Assignment%201.docx.md) 与官方模板 [ID2223_Lab_Session_2.ipynb](lab1/notebooks/ID2223_Lab_Session_2.ipynb)（Part A9 & Part B）。
 目标运行与复现环境：**Google Colab（免费 T4 GPU）**。Lab 2（[Lab Assignment 2.md](Lab%20Assignment%202.md)）待 Lab 1 完成后归档规划文件再启动。
 
 ## 目标与交付范围
@@ -40,17 +40,17 @@
 - [x] 在 `lab1/results/checkpoints_manifest.json` 登记两基线最优 checkpoint（本地权重已生成，待同步上传至共享 Google Drive 供 B/C 直接拉取）。
 
 ### Phase 3：并行专题实验（角色 B & 角色 C 并行）
-**Status:** `pending`
+**Status:** `in_progress`（角色 C Task 4 已完成；角色 B 不在本次交付范围）
 
 - [ ] **角色 B — Task 3（容量与正则化）**：控制变量对比宽度/深度、L2 正则、以及 **无 Dropout + 2 组 Dropout 设置**；用学习曲线 + `train_eval` 确定性评估区分欠拟合、过拟合与优化不充分。
 - [ ] **角色 B — Task 5（预测分析与对抗样本）**：输出混淆矩阵、类别级指标、正/误预测代表性样本；基于可微 `prepare_inputs` 在 `[0, 1]` 像素空间实现对抗攻击（FGSM + 可选 PGD），明确攻击成功定义与扰动约束 $\epsilon$，区分随机损坏与定向对抗扰动。
-- [ ] **角色 C — Task 4（鲁棒性与数据增强）**：在验证集上确定合适的数据增强策略，并冻结可复现损坏测试集配置 `lab1/configs/corruptions_t4.json`（如旋转、几何形变、高斯噪声）；在同一组评估图像上对比原训练 vs 增强训练在干净/损坏图上的精度、错误模式变化、额外开销及标签歧义。
+- [x] **角色 C — Task 4（鲁棒性与数据增强）**：已在 Colab T4 完成 seed-42 ResNet 无增强/crop+flip 对照及全部冻结配置训练；固定逐图损坏配置 `lab1/configs/corruptions_t4.json`，在相同 10,000 个 test ID 上完成干净/旋转/平移/高斯噪声精度、预测翻转、逐类错误、配对样例与额外开销分析。
 
 ### Phase 4：跨图像域泛化与统一硬件基准（角色 C 牵头，A/B 配合）
-**Status:** `pending`
+**Status:** `complete`（仅角色 C 专题交付；不包含 Phase 5 团队统稿）
 
-- [ ] **角色 C — Challenge 2（跨图像域迁移：STL-10）**：在严格 held-out（不参与任何调参/增强选择）的 **STL-10 test 集（9 个与 CIFAR-10 兼容类别，共 7,200 张）** 上评估选定模型（如基线 AlexNet/ResNet 及增强版 ResNet）；对齐标签映射与 `96×96 → 32×32` 预处理，同时报告 10-way 精度（含 `frog` 误判泄露率）与 9-way 掩码精度，并对照 CIFAR-10 test 9 类子集量化域偏移掉点与典型失败案例。
-- [ ] **角色 C — Task 6（统一硬件基准与权衡分析）**：在统一 Colab T4 环境（FP32，`bs=1` 与 `bs=128`）汇总训练成本与推理延迟/吞吐；分析训练时长、随机种子、硬件对结论的敏感性，结合精度与鲁棒性给出选型建议。
+- [x] **角色 C — Challenge 2（跨图像域迁移：STL-10）**：已对 5 个冻结 checkpoint 在严格 held-out 的 STL-10 test 9 共享类（7,200 张）上完成纯前向评估；保留 10-way/frog 泄露率与 9-way 掩码双口径，对照 CIFAR-10 test 9,000 张同共享类计算总体/逐类 domain drop，并输出混淆矩阵与相同 STL ID 的配对失败案例。STL 未参与模型或增强选择。
+- [x] **角色 C — Task 6（统一硬件基准与权衡分析）**：5 个配置均保留 Colab T4、FP32、30-epoch 训练成本；因当日 Colab GPU 配额耗尽，经用户确认，统一推理评测改在 SSH Jade 的 **NVIDIA RTX 2000 Ada Generation**、FP32 上完成（`bs=1/128`、warmup 10、measured 50）。训练耗时只在 T4 组内比较，推理只在 Jade 组内比较；已完成训练时长、seed 与跨硬件敏感性分析，未将不同硬件直接排名。
 
 ### Phase 5：最终汇总、复现校验与交付（角色 C 统稿，全员审校）
 **Status:** `pending`

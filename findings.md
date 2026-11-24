@@ -75,3 +75,13 @@
 ## 4. 实施前微调项（Phase 1 探针验证）
 
 - **优化器与学习率**：建议 `batch_size = 128`、`epochs = 30`（或 `40`）；AlexNet 无 BN 对大 lr 敏感，Phase 1 在 Colab T4 上做 3–5 epoch 短探针确认 AlexNet 与 ResNet 的最优默认 lr 并记录结果。
+
+---
+
+## 5. 角色 C 实施记录（2026-11-24）
+
+- **Colab CLI 实测可用**：通过官方 `google-colab-cli` 完成 T4 smoke、5 次正式训练及 Drive 持久化。当日 GPU 配额耗尽后，经用户明确确认，不再等待或重训；保留 T4 训练记录，将统一评测迁移至 SSH Jade 的 RTX 2000 Ada，训练与推理硬件字段分别保存。
+- **同图损坏的复现关键**：每个样本使用独立 CPU generator，种子为 `2223 + image_id`；旋转、平移和高斯噪声均在 `[0,1]` raw tensor 上执行，loader `shuffle=False`。单元测试验证 workers 0/2 逐像素一致，5 份 NPZ 的 CIFAR/STL ID 顺序一致。
+- **train/evaluate 隔离**：训练阶段不迭代 test、不加载 STL；只有 5 份完整 T4 JSON/history/checkpoint 全部通过配置与权重校验后才开放 evaluate。评测只前向冻结模型，不按 test/STL 结果挑选 seed 或增强。
+- **结果解释边界**：crop+flip 明显改善旋转和平移，却使 seed-42 ResNet 的高斯噪声准确率下降 3.19 个百分点；后续受控实验应单独研究噪声增强，不能泛化为“增强提高所有鲁棒性”。损坏评测时间包含 DataLoader/CPU 变换，不是纯变换 FLOPs。
+- **产物口径**：大数组只保存到压缩 NPZ，JSON 保存 prediction 相对路径和 corruption config SHA-256；配对图按 ID 从原始数据集和固定配置重建。权重不进 Git，轻量 JSON/history/NPZ/CSV/图和已执行 Notebook 回收入库。

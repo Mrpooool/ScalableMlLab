@@ -10,6 +10,7 @@
 ## 1. 运行环境与共享存储约定（Colab T4）
 
 - **标准基准硬件**：Google Colab 免费 **NVIDIA Tesla T4**（默认 `fp32`；每次运行自动写入 `environment.device_name`）。
+- **Role C 已批准例外（2026-11-24）**：当日 Colab GPU 配额耗尽后，用户明确同意保留 5 个配置的 T4 训练记录，并将统一损坏/STL-10/推理评测迁移到 SSH Jade 的 **NVIDIA RTX 2000 Ada Generation**、FP32。训练耗时仅在 T4 组内比较，推理指标仅在 Jade 组内比较；JSON 的 `environment.device_name` 与 `inference_benchmark.device_name` 分别记录真实硬件，禁止标成同一设备或与 Role A 的 RTX 结果直接排名。
 - **代码来源**：公开 GitHub 仓库 `https://github.com/Mrpooool/ScalableMlLab.git`，在 Colab 中 `git clone` 并将 `lab1/src/` 加入 `sys.path`；Notebook 仅做环境初始化、调用 `src/` 与展示图表。
 - **数据集下载**：
   - CIFAR-10：优先使用 Part A1 镜像 `https://data.brainchip.com/dataset-mirror/cifar10/cifar-10-python.tar.gz`（md5 `c58f30108f718f92721af3b95e74349a`），失败回退官方源。

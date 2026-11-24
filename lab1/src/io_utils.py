@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 import torch
 
 
@@ -67,6 +68,17 @@ def load_json(path: str | Path) -> dict[str, Any]:
     """Load a UTF-8 JSON file."""
     with Path(path).open("r", encoding="utf-8") as fh:
         return json.load(fh)
+
+
+def save_numpy_archive(arrays: dict[str, np.ndarray], path: str | Path) -> Path:
+    """Atomically write a compressed .npz archive via a temporary file handle."""
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = target.with_suffix(target.suffix + ".tmp")
+    with tmp_path.open("wb") as fh:
+        np.savez_compressed(fh, **arrays)
+    tmp_path.replace(target)
+    return target
 
 
 def save_history_csv(history: list[dict[str, Any]], path: str | Path) -> Path:

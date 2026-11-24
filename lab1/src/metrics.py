@@ -26,6 +26,24 @@ def synchronize(device: torch.device | str) -> None:
         torch.cuda.synchronize(dev)
 
 
+def compute_per_class_accuracy(
+    targets: np.ndarray,
+    predictions: np.ndarray,
+    class_names: Sequence[str] = CIFAR10_CLASSES,
+) -> dict[str, float | None]:
+    """Compute accuracy per class; classes with no samples map to None."""
+    targets_arr = np.asarray(targets)
+    preds_arr = np.asarray(predictions)
+    per_class: dict[str, float | None] = {}
+    for cls_id, cls_name in enumerate(class_names):
+        cls_mask = targets_arr == cls_id
+        if cls_mask.any():
+            per_class[cls_name] = float(np.mean(preds_arr[cls_mask] == cls_id))
+        else:
+            per_class[cls_name] = None
+    return per_class
+
+
 @torch.inference_mode()
 def evaluate_model(
     model: nn.Module,
@@ -66,6 +84,7 @@ def evaluate_model(
         "accuracy": accuracy,
         "macro_f1": macro_f1,
         "num_samples": int(len(targets_arr)),
+        "per_class_accuracy": compute_per_class_accuracy(targets_arr, predictions),
         "ids": np.asarray(all_ids, dtype=np.int64),
         "targets": targets_arr,
         "predictions": predictions,
@@ -87,11 +106,20 @@ def evaluate_cifar10_shared9(eval_result: dict[str, Any]) -> dict[str, Any]:
     masked_probs[:, CIFAR10_FROG_CLASS_ID] = -np.inf
     preds_9way = masked_probs.argmax(axis=1)
 
+    per_class_acc_9way: dict[str, float] = {}
+    for cls_id in CIFAR10_SHARED_9_IDS:
+        cls_mask = targets_9 == cls_id
+        if cls_mask.any():
+            per_class_acc_9way[CIFAR10_CLASSES[cls_id]] = float(
+                np.mean(preds_9way[cls_mask] == cls_id)
+            )
+
     return {
         "num_samples": int(mask.sum()),
         "cifar10_shared9_10way_acc": float(np.mean(preds_10way == targets_9)),
         "cifar10_shared9_9way_masked_acc": float(np.mean(preds_9way == targets_9)),
         "cifar10_shared9_frog_leakage_rate": float(np.mean(preds_10way == CIFAR10_FROG_CLASS_ID)),
+        "per_class_acc_9way": per_class_acc_9way,
     }
 
 
@@ -110,18 +138,21 @@ def evaluate_stl10_cross_domain(
     dev = torch.device(device)
     was_training = model.training
     model.eval()
+    all_ids: list[int] = []
     all_targets: list[int] = []
     all_logits: list[np.ndarray] = []
 
     try:
-        for raw, targets, _ids in stl10_loader:
+        for raw, targets, ids in stl10_loader:
             raw = raw.to(dev, non_blocking=True)
             logits = model(prepare_inputs(raw, cifar_train_stats, input_size))
+            all_ids.extend(ids.tolist())
             all_targets.extend(targets.tolist())
             all_logits.append(logits.cpu().numpy())
     finally:
         model.train(was_training)
 
+    ids_arr = np.asarray(all_ids, dtype=np.int64)
     targets_arr = np.asarray(all_targets, dtype=np.int64)
     logits_arr = np.concatenate(all_logits, axis=0)
     preds_10way = logits_arr.argmax(axis=1)
@@ -135,7 +166,7 @@ def evaluate_stl10_cross_domain(
         cls_mask = targets_arr == cls_id
         if cls_mask.any():
             per_class_9way[CIFAR10_CLASSES[cls_id]] = float(
-                np.mean(preds_9way[cls_mask] == targets_arr[cls_mask])
+                np.mean(preds_9way[cls_mask] == cls_id)
             )
 
     return {
@@ -153,6 +184,42 @@ def evaluate_stl10_cross_domain(
             )
         ),
         "per_class_acc_9way": per_class_9way,
+        "ids": ids_arr,
+        "targets": targets_arr,
+        "predictions_10way": preds_10way,
+        "predictions_9way": preds_9way,
+    }
+
+
+def build_cross_domain_summary(cifar9: dict[str, Any], stl10: dict[str, Any]) -> dict[str, Any]:
+    """Combine CIFAR-10 shared9 and STL-10 results into a JSON-safe summary.
+
+    Total and per-class domain drop use the CIFAR-10 shared9 9-way masked accuracy minus
+    the STL-10 9-way masked accuracy.
+    """
+    cifar_acc = float(cifar9["cifar10_shared9_9way_masked_acc"])
+    stl_acc = float(stl10["stl10_9way_masked_acc"])
+    per_class_cifar = cifar9["per_class_acc_9way"]
+    per_class_stl = stl10["per_class_acc_9way"]
+    per_class_drop: dict[str, float] = {}
+    for cls_id in CIFAR10_SHARED_9_IDS:
+        cls_name = CIFAR10_CLASSES[cls_id]
+        if cls_name in per_class_cifar and cls_name in per_class_stl:
+            per_class_drop[cls_name] = float(per_class_cifar[cls_name]) - float(
+                per_class_stl[cls_name]
+            )
+    return {
+        "num_cifar10_shared9": int(cifar9["num_samples"]),
+        "num_stl10": int(stl10["num_samples"]),
+        "cifar10_test_9way_acc": cifar_acc,
+        "stl10_10way_acc": float(stl10["stl10_10way_acc"]),
+        "stl10_frog_leakage_rate": float(stl10["stl10_frog_leakage_rate"]),
+        "stl10_9way_masked_acc": stl_acc,
+        "stl10_9way_macro_f1": float(stl10["stl10_9way_macro_f1"]),
+        "domain_drop_9way": cifar_acc - stl_acc,
+        "per_class_cifar10_9way_acc": {k: float(v) for k, v in per_class_cifar.items()},
+        "per_class_stl10_9way_acc": {k: float(v) for k, v in per_class_stl.items()},
+        "per_class_domain_drop_9way": per_class_drop,
     }
 
 

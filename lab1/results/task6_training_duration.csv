@@ -1,0 +1,16 @@
+exp_id,model,seed,augmentation,epoch,val_acc,cumulative_train_time_sec
+t6_alexnet_cifar_no_aug_s42,alexnet_cifar,42,none,10,0.8046,112.30079647899947
+t6_alexnet_cifar_no_aug_s42,alexnet_cifar,42,none,20,0.8236,233.42201542300427
+t6_alexnet_cifar_no_aug_s42,alexnet_cifar,42,none,30,0.8294,353.6339973480026
+t4_resnet18_cifar_no_aug_s42,resnet18_cifar,42,none,10,0.8048,620.3706117130005
+t4_resnet18_cifar_no_aug_s42,resnet18_cifar,42,none,20,0.8712,1237.622316381996
+t4_resnet18_cifar_no_aug_s42,resnet18_cifar,42,none,30,0.8734,1855.1610496059984
+t4_resnet18_cifar_crop_flip_s42,resnet18_cifar,42,crop32_pad4_hflip05,10,0.7854,622.2419890399979
+t4_resnet18_cifar_crop_flip_s42,resnet18_cifar,42,crop32_pad4_hflip05,20,0.8832,1241.4734284599908
+t4_resnet18_cifar_crop_flip_s42,resnet18_cifar,42,crop32_pad4_hflip05,30,0.9304,1859.618124128996
+t6_resnet18_cifar_crop_flip_s0,resnet18_cifar,0,crop32_pad4_hflip05,10,0.7956,621.1312542480064
+t6_resnet18_cifar_crop_flip_s0,resnet18_cifar,0,crop32_pad4_hflip05,20,0.884,1239.893601962005
+t6_resnet18_cifar_crop_flip_s0,resnet18_cifar,0,crop32_pad4_hflip05,30,0.9302,1858.2715590019998
+t6_resnet18_cifar_crop_flip_s123,resnet18_cifar,123,crop32_pad4_hflip05,10,0.7734,620.0008336390001
+t6_resnet18_cifar_crop_flip_s123,resnet18_cifar,123,crop32_pad4_hflip05,20,0.8778,1237.8774415009939
+t6_resnet18_cifar_crop_flip_s123,resnet18_cifar,123,crop32_pad4_hflip05,30,0.9318,1855.7989412519928

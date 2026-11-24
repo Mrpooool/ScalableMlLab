@@ -1,0 +1,211 @@
+{
+  "exp_id": "t6_alexnet_cifar_no_aug_s42",
+  "task": "task6",
+  "owner": "role_c",
+  "git_commit": "unknown",
+  "timestamp_utc": "2026-11-24T16:27:31Z",
+  "environment": {
+    "platform": "colab",
+    "device_name": "Tesla T4",
+    "precision": "fp32",
+    "torch_version": "2.14.1+cu130",
+    "cuda_version": "13.0"
+  },
+  "config": {
+    "exp_id": "t6_alexnet_cifar_no_aug_s42",
+    "task": "task6",
+    "owner": "role_c",
+    "model": "alexnet_cifar",
+    "model_options": {
+      "dropout": 0.5,
+      "width_mult": 1.0,
+      "fc_hidden1": 1024,
+      "fc_hidden2": 512,
+      "use_bn": false
+    },
+    "seed": 42,
+    "epochs": 30,
+    "batch_size": 128,
+    "optimizer": "sgd",
+    "lr": 0.01,
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "scheduler": "cosine",
+    "augmentation": "none",
+    "eval_train_every": 1,
+    "precision": "fp32",
+    "notes": "Role C task6 frozen T4 matrix row (alexnet_cifar, seed 42, aug none)",
+    "dropout": 0.5
+  },
+  "model_stats": {
+    "total_params": 6976842,
+    "trainable_params": 6976842,
+    "checkpoint_size_mb": 26.621
+  },
+  "training": {
+    "num_trained_samples": 1350000,
+    "total_train_time_sec": 353.666,
+    "avg_epoch_time_sec": 11.789,
+    "peak_gpu_mem_mb": 316.91,
+    "best_epoch": 28,
+    "best_val_acc": 0.8296,
+    "best_val_ce": 0.8804340085029602,
+    "final_train_eval_acc": 1.0,
+    "final_train_eval_ce": 0.0005239420046408972,
+    "history_file": "lab1/results/histories/t6_alexnet_cifar_no_aug_s42.csv"
+  },
+  "evaluation": {
+    "clean_test_acc": 0.8266,
+    "clean_test_ce": 0.9088199039459228,
+    "macro_f1": 0.8264702445428969,
+    "corrupted_metrics": {
+      "clean": {
+        "accuracy": 0.8266,
+        "ce": 0.9088199039459228,
+        "macro_f1": 0.8264702445428969,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.861,
+          "automobile": 0.907,
+          "bird": 0.731,
+          "cat": 0.683,
+          "deer": 0.806,
+          "dog": 0.747,
+          "frog": 0.87,
+          "horse": 0.867,
+          "ship": 0.912,
+          "truck": 0.882
+        },
+        "evaluation_time_sec": 0.6348107689991593
+      },
+      "rotation_15deg": {
+        "accuracy": 0.6829,
+        "ce": 1.8495535320281982,
+        "macro_f1": 0.696596718456852,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.734,
+          "automobile": 0.837,
+          "bird": 0.694,
+          "cat": 0.736,
+          "deer": 0.584,
+          "dog": 0.641,
+          "frog": 0.565,
+          "horse": 0.665,
+          "ship": 0.742,
+          "truck": 0.631
+        },
+        "evaluation_time_sec": 0.5007842070190236,
+        "accuracy_drop_vs_clean": 0.14370000000000005,
+        "prediction_flip_rate_vs_clean": 0.2557,
+        "clean_correct_to_wrong_count": 1768,
+        "clean_correct_to_wrong_rate": 0.21388821679167674
+      },
+      "translation_3px": {
+        "accuracy": 0.7035,
+        "ce": 1.8190752656936646,
+        "macro_f1": 0.7078028715150747,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.812,
+          "automobile": 0.867,
+          "bird": 0.658,
+          "cat": 0.684,
+          "deer": 0.593,
+          "dog": 0.543,
+          "frog": 0.651,
+          "horse": 0.716,
+          "ship": 0.765,
+          "truck": 0.746
+        },
+        "evaluation_time_sec": 0.4793349769897759,
+        "accuracy_drop_vs_clean": 0.12309999999999999,
+        "prediction_flip_rate_vs_clean": 0.2479,
+        "clean_correct_to_wrong_count": 1608,
+        "clean_correct_to_wrong_rate": 0.19453181708202275
+      },
+      "gaussian_noise_std_0_05": {
+        "accuracy": 0.7756,
+        "ce": 1.1803176307678223,
+        "macro_f1": 0.775092864134751,
+        "num_samples": 10000,
+        "per_class_accuracy": {
+          "airplane": 0.747,
+          "automobile": 0.855,
+          "bird": 0.658,
+          "cat": 0.585,
+          "deer": 0.792,
+          "dog": 0.624,
+          "frog": 0.932,
+          "horse": 0.785,
+          "ship": 0.891,
+          "truck": 0.887
+        },
+        "evaluation_time_sec": 0.44830708496738225,
+        "accuracy_drop_vs_clean": 0.051000000000000045,
+        "prediction_flip_rate_vs_clean": 0.128,
+        "clean_correct_to_wrong_count": 749,
+        "clean_correct_to_wrong_rate": 0.0906121461408178
+      }
+    },
+    "adversarial_metrics": {},
+    "challenge2_stl10": {
+      "num_cifar10_shared9": 9000,
+      "num_stl10": 7200,
+      "cifar10_test_9way_acc": 0.831,
+      "stl10_10way_acc": 0.6675,
+      "stl10_frog_leakage_rate": 0.03138888888888889,
+      "stl10_9way_masked_acc": 0.6825,
+      "stl10_9way_macro_f1": 0.6789529670247968,
+      "domain_drop_9way": 0.14849999999999997,
+      "per_class_cifar10_9way_acc": {
+        "airplane": 0.864,
+        "automobile": 0.911,
+        "bird": 0.757,
+        "cat": 0.713,
+        "deer": 0.818,
+        "dog": 0.752,
+        "horse": 0.867,
+        "ship": 0.912,
+        "truck": 0.885
+      },
+      "per_class_stl10_9way_acc": {
+        "airplane": 0.82,
+        "automobile": 0.81,
+        "bird": 0.62875,
+        "cat": 0.57125,
+        "deer": 0.7675,
+        "dog": 0.44125,
+        "horse": 0.69375,
+        "ship": 0.80375,
+        "truck": 0.60625
+      },
+      "per_class_domain_drop_9way": {
+        "airplane": 0.04400000000000004,
+        "automobile": 0.10099999999999998,
+        "bird": 0.12824999999999998,
+        "cat": 0.14174999999999993,
+        "deer": 0.05049999999999999,
+        "dog": 0.31075,
+        "horse": 0.17325000000000002,
+        "ship": 0.10825000000000007,
+        "truck": 0.27875000000000005
+      }
+    },
+    "prediction_file": "lab1/results/predictions/t6_alexnet_cifar_no_aug_s42.npz",
+    "corruption_config_sha256": "b21f3606af784affd5b38909a6c59eb7b65bca1f7785d6fe55ff22591dd8edd3"
+  },
+  "inference_benchmark": {
+    "device_name": "NVIDIA RTX 2000 Ada Generation",
+    "precision": "fp32",
+    "bs1_latency_ms": 0.3087094984948635,
+    "bs128_latency_ms_per_batch": 4.496392661239952,
+    "bs128_throughput_imgs_per_sec": 28467.264681617457,
+    "warmup_runs": 10,
+    "measured_runs": 50
+  },
+  "checkpoint_ref": {
+    "drive_rel_path": "checkpoints/t6_alexnet_cifar_no_aug_s42/best.pt",
+    "is_registered_in_manifest": true
+  }
+}

@@ -1,6 +1,16 @@
 # 项目进度
 
-更新：2026-11-23。**Lab 1 Phase 2（角色 A：Task 1 & Task 2）已完成并实测通过；AlexNet（test 82.14%）与 ResNet-18（test 87.01%）30-epoch 基线结果、图表与交接清单已落盘；下一步进入 Phase 3（角色 B Task 3/5 与角色 C Task 4/Challenge 2 并行推进）。**
+更新：2026-11-24。**角色 C 的 Task 4、Challenge 2 与 Task 6 专题实验已全部完成并回收产物；5 个配置均在 Colab Tesla T4 完成 30-epoch 训练，统一损坏/STL-10/推理评测在 SSH Jade 的 NVIDIA RTX 2000 Ada Generation 上完成。角色 B 与 Phase 5 团队统稿不在本次范围内。**
+
+## 2026-11-24：角色 C 专题完成 — 鲁棒性、STL-10 跨域与成本权衡
+
+- 新增固定损坏实现/配置、逐类与逐图跨域指标、断点校验 runner、Role C 图表和 [role_c_task4_challenge2_task6.ipynb](lab1/notebooks/role_c_task4_challenge2_task6.ipynb)；Notebook 已在 Jade 实际执行，8 个 code cell 均有输出，包含 9 幅图，无执行错误。
+- **T4 正式训练**：5 个冻结配置均为 30 epochs、1,350,000 trained samples、FP32，训练 history 连续完整，5 份 checkpoint 已在 Jade 实际加载并核对 exp_id/config/split/best-val。
+- **Task 4（seed-42 ResNet-18）**：crop+flip 相比无增强将 clean test 从 `86.58%` 提升至 `93.08%`，三种损坏平均从 `76.09%` 提升至 `83.22%`；旋转 `76.80%→88.71%`、平移 `80.14%→92.81%`，但高斯噪声 `71.33%→68.14%`，因此不能宣称该增强改善噪声鲁棒性。T4 训练时间 `1855.352s→1859.826s`，峰值显存均 `802.99 MB`。
+- **Challenge 2**：seed-42 AlexNet、ResNet 无增强、ResNet crop+flip 的 STL-10 9-way 准确率分别为 `68.25% / 72.67% / 81.08%`，domain drop 分别为 `14.85 / 14.17 / 12.31` 个百分点；已保存 7,200 个相同 STL ID 的逐图预测、共享 9 类混淆矩阵和配对失败图，STL 未参与选型。
+- **Task 6**：训练成本仅在 T4 组内比较，推理延迟/吞吐仅在 Jade RTX 2000 Ada 组内比较；已生成 5 行主表、seed sensitivity（mean/sample std/min/max）、epoch 10/20/30 时长敏感性和 Role A RTX 5070 Ti 跨硬件参照表，不将不同硬件直接排名。
+- **验证**：本地 `29/29` 单元测试通过；远端与本地验收脚本均输出 `ALL_ROLE_C_ACCEPTANCE_CHECKS_PASSED`，覆盖 5 份 JSON、30 行 history、5 份 prediction NPZ、4 份 CSV、9 幅图及 manifest；实际检查损坏/STL 配对图像和修正后的成本权衡图。
+- 轻量产物位于 `lab1/results/`（含 `predictions/`、`histories/`、`figures/`），专题说明见 [lab1/docs/role_c_notes.md](lab1/docs/role_c_notes.md)，英文 LaTeX 报告见 [lab1/docs/role_c_report.tex](lab1/docs/role_c_report.tex)，编译版见 [lab1/docs/role_c_report.pdf](lab1/docs/role_c_report.pdf)；checkpoint 仅保留在 Drive/Jade，不进入 Git。
 
 ## 2026-11-23：Phase 2 完成 — Task 1 数据探索与 Task 2 双模型 30-Epoch 正式基线
 
