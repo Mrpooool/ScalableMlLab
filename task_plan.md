@@ -1,6 +1,6 @@
 # 项目执行方案（Lab 1）
 
-更新：2026-11-24。当前任务依据：[Lab Assignment 1.docx.md](Lab%20Assignment%201.docx.md) 与官方模板 [ID2223_Lab_Session_2.ipynb](lab1/notebooks/ID2223_Lab_Session_2.ipynb)（Part A9 & Part B）。
+更新：2026-11-25。当前任务依据：用户提供的[原始作业要求](https://docs.google.com/document/d/1_WypZO1CwatDjMs1Mm4kfbG2GtAOk8y6/edit)、仓库副本 [Lab Assignment 1.docx.md](Lab%20Assignment%201.docx.md) 与官方模板 [ID2223_Lab_Session_2.ipynb](lab1/notebooks/ID2223_Lab_Session_2.ipynb)（Part A9 & Part B）。
 目标运行与复现环境：**Google Colab（免费 T4 GPU）**。Lab 2（[Lab Assignment 2.md](Lab%20Assignment%202.md)）待 Lab 1 完成后归档规划文件再启动。
 
 ## 目标与交付范围
@@ -40,10 +40,10 @@
 - [x] 在 `lab1/results/checkpoints_manifest.json` 登记两基线最优 checkpoint（本地权重已生成，待同步上传至共享 Google Drive 供 B/C 直接拉取）。
 
 ### Phase 3：并行专题实验（角色 B & 角色 C 并行）
-**Status:** `in_progress`（角色 C Task 4 已完成；角色 B 不在本次交付范围）
+**Status:** `complete`（B/C 结果已整合到提交分支）
 
-- [ ] **角色 B — Task 3（容量与正则化）**：控制变量对比宽度/深度、L2 正则、以及 **无 Dropout + 2 组 Dropout 设置**；用学习曲线 + `train_eval` 确定性评估区分欠拟合、过拟合与优化不充分。
-- [ ] **角色 B — Task 5（预测分析与对抗样本）**：输出混淆矩阵、类别级指标、正/误预测代表性样本；基于可微 `prepare_inputs` 在 `[0, 1]` 像素空间实现对抗攻击（FGSM + 可选 PGD），明确攻击成功定义与扰动约束 $\epsilon$，区分随机损坏与定向对抗扰动。
+- [x] **角色 B — Task 3（容量与正则化）**：在 T4 完成 6 条 30-epoch 受控配置，覆盖半宽、L2 与 Dropout 0/0.25/0.5，并保留完整 train_eval/val 曲线和成本记录。
+- [x] **角色 B — Task 5（预测分析与对抗样本）**：在 T4 对 A 冻结权重评测全部 10,000 张测试图，完成类别指标、混淆矩阵、正/误例、FGSM 与同预算随机控制，记录约束检查和 ASR。
 - [x] **角色 C — Task 4（鲁棒性与数据增强）**：已在 Colab T4 完成 seed-42 ResNet 无增强/crop+flip 对照及全部冻结配置训练；固定逐图损坏配置 `lab1/configs/corruptions_t4.json`，在相同 10,000 个 test ID 上完成干净/旋转/平移/高斯噪声精度、预测翻转、逐类错误、配对样例与额外开销分析。
 
 ### Phase 4：跨图像域泛化与统一硬件基准（角色 C 牵头，A/B 配合）
@@ -53,11 +53,12 @@
 - [x] **角色 C — Task 6（统一硬件基准与权衡分析）**：5 个配置均保留 Colab T4、FP32、30-epoch 训练成本；因当日 Colab GPU 配额耗尽，经用户确认，统一推理评测改在 SSH Jade 的 **NVIDIA RTX 2000 Ada Generation**、FP32 上完成（`bs=1/128`、warmup 10、measured 50）。训练耗时只在 T4 组内比较，推理只在 Jade 组内比较；已完成训练时长、seed 与跨硬件敏感性分析，未将不同硬件直接排名。
 
 ### Phase 5：最终汇总、复现校验与交付（角色 C 统稿，全员审校）
-**Status:** `pending`
+**Status:** `complete`（提交文件已准备；待团队合并分支和课程平台上传）
 
-- [ ] 汇总全部 `lab1/results/*.json` 生成 `lab1/results/summary.csv`，逐项核对报告数字与图表来源。
-- [ ] 在 Colab T4 从头运行最终提交版 Executed Notebook（保留完整输出与引用列表）。
-- [ ] 完成并审校最终英文 Report（Task 1–6 + Challenge 2）。
+- [x] 生成 `lab1/results/submission_summary.csv` 汇总 15 份训练/冻结权重评测记录，分别标明训练与评测硬件；保留 A 原有的两行 `summary.csv`。
+- [x] 在 Colab CPU 顺序执行统一 `lab1_submission.ipynb` 的 9 个代码单元，保存 24 幅图和完整源码附录；核对 13 个训练历史、41 个预测条件及 CPU 架构前向。沿用已完成的正式 GPU 实验，不把展示重执行称为重新训练。
+- [x] A 的原始结果展示本已在 Colab CPU 执行并保存 5 个单元输出；保留 RTX 训练/测速来源。
+- [x] 完成统一英文 `lab1/docs/lab1_report.pdf`（18 页）与 Markdown，覆盖 Task 1–6、Challenge 2、引用和复现说明。34 项现有单元测试通过；机器检查记录见 `submission_validation.json`。
 
 ---
 

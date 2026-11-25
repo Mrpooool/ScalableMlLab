@@ -1,4 +1,5 @@
 {
+  ".gitattributes": "c2825b8500ed5bf7374c313fdb8fa9e3037f624ef803f5640334459abba8a1b6",
   "AGENTS.md": "e25566c51cee43b951cf2e051ed246b412f7b1226497aa62890935fe647d0e27",
   "Lab Assignment 1.docx.md": "5bfed9c11762b7c2a1aee6a8cb4fe8d848c91a8c7175dcc53a7ad4127cfdcf99",
   "lab1/configs/baseline.json": "7d3eca20304e58c0d75d622509b93a5d5361337160c01cedc5615aed693ca583",
@@ -91,6 +92,7 @@
   "lab1/results/role_b_validation.json": "a4768d802daf63e603b66cda41a66e0f0e7c5f1ea41731badbd0617bed6108f4",
   "lab1/results/role_c_summary.csv": "265781b624c51346f7551455b40e4d8dabb2e20091c217b516e0e06af9b960eb",
   "lab1/results/submission_summary.csv": "5b934c241e662c6971e31e8a4cb0e932f7c04ced109547dee9a2851b8b16e836",
+  "lab1/results/submission_validation.json": "d0dba21d29343fdd9282650f87a5561110217eb799a515ab398b026a13ef565b",
   "lab1/results/summary.csv": "6d3c815bdb9f68b6dedd4165cd1e56078f844b944e883e7cd33019caca6534aa",
   "lab1/results/t2_alexnet_cifar_baseline_s42.json": "3f850cf11167057d050d5a35d908c9dd26ad33d281811a9c0ef32903beb9a41c",
   "lab1/results/t2_resnet18_cifar_baseline_s42.json": "ed06d60fbef896fcd71d25d935224110aa2bcba8d4e2df42b7d593d66adaba6b",
@@ -118,8 +120,9 @@
   "lab1/results/task6_training_duration.csv": "6ef649a5bca63fd44d6f86efc52e035fc1486e407a2cc33c218a7e8f8928a429",
   "lab1/scripts/build_report_pdf.py": "89a206b28cd848c349d0ddcba3f49129f1e2202c26a7e89a451282cd40e47139",
   "lab1/scripts/build_role_b_notebook.py": "751d91665f9ddc42d7d8db39155acf9cb76c1bdfbe34b80f31e7c2034ac6f62d",
-  "lab1/scripts/build_submission.py": "162dbfa9bd072703d70801cebbd80b9dc4bea0299ad9acd85a6ab77ff38a438e",
+  "lab1/scripts/build_submission.py": "980c4f9fb7bac9394a63c41d37c92bc1fbedc413e3d45485f74805348a80ab36",
   "lab1/scripts/export_role_b.py": "f71e9ae4951daabb2e409e96df62f8b649ee3175d2b5bb64dd0127463de832ec",
+  "lab1/scripts/validate_submission.py": "b06bace0d9b7939ec8e8ff3bcd85c366cd14f83715b70c8b9cfb661f14081fc9",
   "lab1/src/__init__.py": "7b4b34a627868d8362c34fd2c4124d83421f47892bbafec16cba80465412a8f7",
   "lab1/src/adversarial.py": "b274df5bb3e141285ba824cff7aff9d0be109ecc58110be4211c80bbd7b2973b",
   "lab1/src/corruptions.py": "edb3af8c91f7f3fa16ca2282d49817bd9292683b6e47e7a583935ceac74a54cb",
@@ -133,7 +136,7 @@
   "lab1/src/run_role_b_experiments.py": "588433007066c7d88dff26c1dd7d6e4a0950e871e33982e3277d5d4858fd17a5",
   "lab1/src/run_role_c_experiments.py": "b54fea54c238f6064ee19181b7a1bbb7df9ab578f62a2d060881dfbe2aaf29d6",
   "lab1/src/seed.py": "efafa7c2a40a3592551e3c8b9a7e15d29d5a7e374e6e04f151f03f1d46f59b8a",
-  "lab1/src/submission.py": "5d13b7a7fb72f49e930b28c8f18606d87f6c7c064af2d3ea6be0868e8af1150a",
+  "lab1/src/submission.py": "266ebb106f6f46599e8f38b1e61b600cc53ee918678af6a7f8ff21c002bf8423",
   "lab1/src/train.py": "9968e22341e361ee50212b3086a417641b8875e15504b687b294d361149ccc7b",
   "lab1/tests/test_core.py": "5c41457b13789c0a05c7fe0b984918b8ea78464c4a0943c5feee8857276c1bd1",
   "lab1/tests/test_role_b.py": "7404956b452cb5bd6794f6c473340f415b5485ebf3931c794307ef52fd28ad8d"

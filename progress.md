@@ -1,6 +1,17 @@
 # 项目进度
 
-更新：2026-11-24。**角色 C 的 Task 4、Challenge 2 与 Task 6 专题实验已全部完成并回收产物；5 个配置均在 Colab Tesla T4 完成 30-epoch 训练，统一损坏/STL-10/推理评测在 SSH Jade 的 NVIDIA RTX 2000 Ada Generation 上完成。角色 B 与 Phase 5 团队统稿不在本次范围内。**
+更新：2026-11-25。A/B/C 已整合为完整提交 Notebook 和单份英文报告，提交分支为 `feat/lab1-submission`；文件已准备，课程平台尚未上传。
+
+## 2026-11-25：团队提交整合与真实输出核对
+
+- 逐条核对用户提供的原始作业要求，覆盖 Task 1-6 和已尝试的 Challenge 2；Challenge 1 为 optional，未尝试。
+- A 的 Notebook 在 Colab CPU 完成 5 个展示单元、4 幅图，无错误；只展示原始 RTX 5070 Ti 实验，未重训或改写硬件来源。
+- B 已完成 6 个 T4 训练配置和 A 两冻结权重的完整 Task 5 分析。统一报告保留 A ResNet 原始 87.01% 与 B 在 T4 复评 87.02% 的一图差异，未混用两套指标。
+- 最终 [lab1_submission.ipynb](lab1/notebooks/lab1_submission.ipynb) 在 Colab CPU 顺序执行 9 个单元，含 24 幅图、18 份可离线阅读的源码/配置附录，无 error 或隐藏输出占位符。模型训练和测速继续保留原始环境信息。
+- 整合审计通过：固定 45k/5k split 无交集；13 份完整 30-epoch history 的最佳验证 epoch 一致；41 个逐图预测条件与保存的数值相符；CPU 架构前向尺寸和参数量一致；34 项现有单元测试通过。
+- 单份 [英文报告](lab1/docs/lab1_report.pdf) 共 18 页，已逐页查看渲染；Markdown 可编辑。修正旧 C 章节中 seed 0 噪声准确率最高的文字错误，实际最高为 seed 42（0.6814）。原始专题章节保留作为历史材料。
+- 最终架构成本比较使用 C 的同设备 T4 训练/Jade 推理组；B 消融成本只在其 T4 组内比较。未知的 C 历史 Git commit 保留 unknown，未补造来源。
+- 交付入口和完整训练命令见 [submission_instructions.md](lab1/docs/submission_instructions.md)；数值/结构检查见 [submission_validation.json](lab1/results/submission_validation.json)，源码/结果快照附 SHA256 清单。
 
 ## 2026-11-24：角色 C 专题完成 — 鲁棒性、STL-10 跨域与成本权衡
 

@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "source_ref": "b0a439c3cd71c723283c0dc458d19be1f3d83aff",
+  "display_runtime": "Google Colab CPU (Linux, Python 3.13.18, torch 2.14.1+cpu)",
+  "full_gpu_retraining_in_integration": false,
+  "training_histories_checked": 13,
+  "paired_prediction_conditions_checked": 41,
+  "unit_tests_passed": 34,
+  "source_appendix_files_checked": 18,
+  "notebooks": {
+    "role_a_task1_task2.ipynb": {
+      "executed_code_cells": 5,
+      "png_figures": 4,
+      "errors": 0,
+      "sha256": "7236545a1829527be1eac557e87697a01029495c95ed7dcea09147cc5e6c2c34"
+    },
+    "role_b_task3_task5.ipynb": {
+      "executed_code_cells": 5,
+      "png_figures": 11,
+      "errors": 0,
+      "sha256": "c7b7813570525c0bba145c97e925d9cdce7fec56ee713533fd566d6416ba171c"
+    },
+    "role_c_task4_challenge2_task6.ipynb": {
+      "executed_code_cells": 8,
+      "png_figures": 9,
+      "errors": 0,
+      "sha256": "02e9daaef488c2aad30dbb1985d29890f06aa8628b1b9afce9389811e7a0d5dd"
+    },
+    "lab1_submission.ipynb": {
+      "executed_code_cells": 9,
+      "png_figures": 24,
+      "errors": 0,
+      "sha256": "20840a3aef278fb5164f0adedcaeb3acf197e3fb6c4e35cfaf108a69ebb3cb93"
+    }
+  },
+  "report_pages_visually_reviewed": 18,
+  "report_sha256": "68f07e1a79d68f27f6b74e66b7dfab8fe1373a17d368f1cf29f109b61b7930b4",
+  "provenance_notes": [
+    "A training/benchmark: RTX 5070 Ti Laptop",
+    "B training/evaluation: Tesla T4",
+    "C training: Tesla T4; evaluation/inference: Jade RTX 2000 Ada",
+    "C historical Git commit unknown; no historical commit invented"
+  ]
+}

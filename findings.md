@@ -2,6 +2,12 @@
 
 更新：2026-11-21。依据：[Lab Assignment 1.docx.md](Lab%20Assignment%201.docx.md) 与官方模板 [ID2223_Lab_Session_2.ipynb](lab1/notebooks/ID2223_Lab_Session_2.ipynb)。
 
+## 2026-11-25 原文核对与提交口径
+
+用户提供的 [Google 文档原文](https://docs.google.com/document/d/1_WypZO1CwatDjMs1Mm4kfbG2GtAOk8y6/edit) 与仓库要求副本的 Task 1-6/Challenge/Deliverables 内容一致。原文要求一份已执行 Notebook 和一份覆盖全部任务的报告；Colab 受限时允许分开 Notebook，报告仍须统一。原文没有要求将所有已有实验重新在 Colab 训练，也没有规定所有测量必须同一张卡。团队 AGENTS.md 要求成本横向比较使用一致硬件；本次保留 C 已约定的 T4 训练/Jade 推理分组和 B 自己的 T4 消融组，A 的 RTX 数字仅作独立历史记录。
+
+最终统一 Notebook 在 Colab CPU 审计并展示真实保存结果，包含完整实现的可读附录。该执行不改变历史 GPU 训练和测速来源。整合使用 `submission_summary.csv`，避免覆盖 A Notebook 使用的原始两行 `summary.csv`。
+
 ## 1. 作业与 Part B 硬性要求摘录
 
 | 项目 | 作业 + Part B 补充要求 |
