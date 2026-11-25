@@ -5,6 +5,8 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.runtime/
+lab1/results/smoke_role_b/
 
 # Jupyter / Colab
 .ipynb_checkpoints/

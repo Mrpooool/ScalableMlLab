@@ -1,0 +1,25 @@
+{
+  "unit_tests": {
+    "total": 34,
+    "passed": 34,
+    "execution": "local CPU"
+  },
+  "colab_smoke": {
+    "device": "Tesla T4",
+    "tests_passed": 5,
+    "train_samples": 128,
+    "val_samples": 64,
+    "epochs": 1
+  },
+  "formal_training": {
+    "device": "Tesla T4",
+    "configurations": 6,
+    "epochs_each": 30,
+    "trained_samples_total": 8100000
+  },
+  "independent_audit": "passed: source hashes, training histories, checkpoint selection, 18 prediction archives, accuracy and ASR",
+  "shared_weights": {
+    "files": 6,
+    "readback_sha256_matched": 6
+  }
+}

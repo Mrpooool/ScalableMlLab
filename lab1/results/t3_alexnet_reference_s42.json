@@ -1,0 +1,116 @@
+{
+  "exp_id": "t3_alexnet_reference_s42",
+  "task": "task3",
+  "owner": "role_b",
+  "git_commit": "d2eec8535fe105becf4ba035ce5fb762c57a687c",
+  "timestamp_utc": "2026-11-25T01:11:50Z",
+  "environment": {
+    "platform": "colab",
+    "device_name": "Tesla T4",
+    "precision": "fp32",
+    "torch_version": "2.14.1+cu130",
+    "cuda_version": "13.0"
+  },
+  "config": {
+    "exp_id": "t3_alexnet_reference_s42",
+    "task": "task3",
+    "owner": "role_b",
+    "model": "alexnet_cifar",
+    "model_options": {
+      "dropout": 0.5,
+      "width_mult": 1.0,
+      "fc_hidden1": 1024,
+      "fc_hidden2": 512,
+      "use_bn": false
+    },
+    "seed": 42,
+    "epochs": 30,
+    "batch_size": 128,
+    "optimizer": "sgd",
+    "lr": 0.01,
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "scheduler": "cosine",
+    "augmentation": "none",
+    "eval_train_every": 1,
+    "precision": "fp32",
+    "notes": "Role B controlled comparison; fresh initialization; full training",
+    "dropout": 0.5
+  },
+  "model_stats": {
+    "total_params": 6976842,
+    "trainable_params": 6976842,
+    "checkpoint_size_mb": 26.62
+  },
+  "training": {
+    "num_trained_samples": 1350000,
+    "total_train_time_sec": 358.596,
+    "avg_epoch_time_sec": 11.953,
+    "peak_gpu_mem_mb": 314.94,
+    "best_epoch": 30,
+    "best_val_acc": 0.8346,
+    "best_val_ce": 0.8865152466773987,
+    "final_train_eval_acc": 1.0,
+    "final_train_eval_ce": 0.00048704240578744144,
+    "history_file": "lab1/results/histories/t3_alexnet_reference_s42.csv"
+  },
+  "evaluation": {
+    "clean_test_acc": 0.8266,
+    "clean_test_ce": 0.9178987894058227,
+    "macro_f1": 0.8262350779614851,
+    "corrupted_metrics": {},
+    "adversarial_metrics": {},
+    "challenge2_stl10": {}
+  },
+  "inference_benchmark": {
+    "device_name": "Tesla T4",
+    "precision": "fp32",
+    "bs1_latency_ms": 0.6471714800045447,
+    "bs128_latency_ms_per_batch": 8.32412275999559,
+    "bs128_throughput_imgs_per_sec": 15376.995713608125,
+    "warmup_runs": 10,
+    "measured_runs": 50
+  },
+  "checkpoint_ref": {
+    "drive_rel_path": "checkpoints/t3_alexnet_reference_s42/best.pt",
+    "is_registered_in_manifest": true,
+    "drive_file_id": "1ICv-JIfYtKG-D7SkSBUsqME_4mOmpR0e",
+    "drive_url": "https://drive.google.com/file/d/1ICv-JIfYtKG-D7SkSBUsqME_4mOmpR0e/view?usp=drivesdk"
+  },
+  "role_b": {
+    "name": "reference",
+    "run_kind": "full",
+    "source": {
+      "base_commit": "d2eec8535fe105becf4ba035ce5fb762c57a687c",
+      "working_tree": "source snapshot identified by SHA256",
+      "sha256": {
+        "lab1/src/__init__.py": "7b4b34a627868d8362c34fd2c4124d83421f47892bbafec16cba80465412a8f7",
+        "lab1/src/adversarial.py": "b274df5bb3e141285ba824cff7aff9d0be109ecc58110be4211c80bbd7b2973b",
+        "lab1/src/corruptions.py": "edb3af8c91f7f3fa16ca2282d49817bd9292683b6e47e7a583935ceac74a54cb",
+        "lab1/src/data.py": "dba07491603c84d09e34b6267bdbd8649900c88949cfbb7235625eef96bc8701",
+        "lab1/src/io_utils.py": "ab8417854dfb5ca2792fca74a7c4ae9894c1cec37c7f711e10928012bb2924fa",
+        "lab1/src/metrics.py": "d2e4345843a9df2f41a6f38374e6e34fbca90f11e52c220bbcf6546d7c3f18b2",
+        "lab1/src/models.py": "0f6ce776dd15841d6258f3deb3fd6b461b8f5228c956113446f97e2df4ce3381",
+        "lab1/src/plots.py": "230f021b9d5d64bfac8a0342a4b4ed6a12dcd9e46441fef4017fce6db90a0212",
+        "lab1/src/role_b_analysis.py": "4bb3d9a435e07a72a9ac43ffef85c5a99441551d43addbd46b0e3c5f0f0edac5",
+        "lab1/src/run_phase2_baselines.py": "e3136a8a32d95d38c6c92e4f848a47ce5e76765029808408cac8995191fede28",
+        "lab1/src/run_role_b_experiments.py": "588433007066c7d88dff26c1dd7d6e4a0950e871e33982e3277d5d4858fd17a5",
+        "lab1/src/run_role_c_experiments.py": "b54fea54c238f6064ee19181b7a1bbb7df9ab578f62a2d060881dfbe2aaf29d6",
+        "lab1/src/seed.py": "efafa7c2a40a3592551e3c8b9a7e15d29d5a7e374e6e04f151f03f1d46f59b8a",
+        "lab1/src/train.py": "9968e22341e361ee50212b3086a417641b8875e15504b687b294d361149ccc7b",
+        "lab1/configs/role_b_experiments.json": "1eb2b0cad92c60324f63e720fc5706cbdc51227a004b4a96d9a8f90fc9f3e8bd",
+        "lab1/configs/baseline.json": "7d3eca20304e58c0d75d622509b93a5d5361337160c01cedc5615aed693ca583",
+        "lab1/configs/split_indices.json": "220e6c8c184f75bdc2c98d82520fda9bf4f40b86e4ee01bbe1820037eaf2a5ec"
+      }
+    },
+    "checkpoint_sha256": "cfdcfe66726c8f2a7c92fcdd4515427919c016a868d0984effd15c9a34451e33",
+    "hardware_scope": "T4",
+    "evaluation_environment": {
+      "platform": "colab",
+      "device_name": "Tesla T4",
+      "precision": "fp32",
+      "torch_version": "2.14.1+cu130",
+      "cuda_version": "13.0"
+    }
+  }
+}
