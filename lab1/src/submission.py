@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import torch
-from IPython.display import Code, Image, display
+from IPython.display import Image, display
 
 
 def audit_results(root):
@@ -126,14 +126,15 @@ def show_task(root, task):
 
 
 def show_implementation(root):
-    """Include complete Python implementation and frozen settings in notebook outputs."""
+    """Print a compact digest inventory for the complete source appendix."""
     root = Path(root)
     paths = [*sorted((root / "lab1/src").glob("*.py")),
              *sorted((root / "lab1/configs").glob("*.json"))]
+    rows = []
     for path in paths:
         raw = path.read_bytes()
-        print(path.relative_to(root), "| SHA256", hashlib.sha256(raw).hexdigest())
-        if path.name == "split_indices.json":
-            print("Full 50,000-ID split is included in the source archive; audited above.")
-        else:
-            display(Code(raw.decode("utf-8"), language="python" if path.suffix == ".py" else "json"))
+        rows.append({"path": path.relative_to(root).as_posix(), "bytes": len(raw),
+                     "sha256": hashlib.sha256(raw).hexdigest()})
+    display(pd.DataFrame(rows))
+    print("Complete implementation/settings are embedded as readable appendix cells above. "
+          "Full 50,000-ID split is in the source archive and was audited in the first cell.")

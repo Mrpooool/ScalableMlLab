@@ -59,9 +59,17 @@ audit_results(ROOT)
                 add("code", f"show_task(ROOT, {task!r})\n")
                 break
     add("markdown", "## Full implementation and frozen configuration appendix\n\n"
-        "The following executed cell includes the complete supplied Python implementation "
-        "and settings with file hashes. Exact split IDs are in the accompanying archive. "
+        "The following text cells embed the complete supplied Python implementation "
+        "and settings for offline reading. The last executed cell prints the file hashes. "
+        "Exact split IDs are in the accompanying archive. "
         "Full training commands and weight locations are in `submission_instructions.md`.\n")
+    for path in [*sorted((ROOT / "lab1/src").glob("*.py")),
+                 *sorted((ROOT / "lab1/configs").glob("*.json"))]:
+        if path.name == "split_indices.json":
+            continue
+        language = "python" if path.suffix == ".py" else "json"
+        add("markdown", f"### {path.relative_to(ROOT).as_posix()}\n\n"
+            f"```{language}\n{path.read_text(encoding='utf-8')}\n```\n")
     add("code", "show_implementation(ROOT)\n")
     notebook = {"nbformat": 4, "nbformat_minor": 5, "cells": cells,
                 "metadata": {"kernelspec": {"name": "python3", "display_name": "Python 3",
