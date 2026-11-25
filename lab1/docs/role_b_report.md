@@ -1,24 +1,26 @@
-# Tasks 3 and 5: Capacity, Regularization and Adversarial Analysis
+# Tasks 3 and 5: capacity, regularization and adversarial analysis
 
-Six complete training runs and both full-test prediction analyses were executed on
-Tesla T4. This chapter supplies Role B's contribution to the combined Tasks 1–6 report.
+We completed six training runs and both full-test prediction analyses on Tesla T4
+for Role B's contribution to the Tasks 1-6 report.
 
 ## Experimental protocol
 
-We reused the team's CIFAR-10 pipeline and manually implemented networks. The official
-50,000-image training set was partitioned into 45,000 training and 5,000 validation
-images using the frozen stratified split (split seed 2223). Normalization used statistics
-computed exclusively on the training partition. The 10,000-image official test set
-was reserved for evaluation of the fixed experimental protocol.
+We used the team's CIFAR-10 pipeline and manually implemented networks. The frozen
+stratified split (split seed 2223) divided the official 50,000-image training set
+into 45,000 training and 5,000 validation images. We computed normalization
+statistics from the training partition alone and reserved the 10,000-image official
+test set for final evaluation after fixing the experimental protocol.
 
-Task 3 used AlexNetCIFAR with seed 42, batch size 128, 30 epochs, SGD with momentum 0.9,
-initial learning rate 0.01, cosine annealing, and no training augmentation. Each run
-processed 1,350,000 training examples and started from a fresh initialization. The
-checkpoint with highest validation accuracy was retained, breaking ties by lower
-validation cross-entropy. Deterministic train_eval and validation metrics were measured
-after every epoch with Dropout disabled. Their cross-entropy values exclude the L2
-penalty. All six training runs used the same Tesla T4, FP32 and PyTorch 2.14.1+cu130.
-Training time includes the per-epoch validation and train_eval passes.
+For Task 3, we trained AlexNetCIFAR for 30 epochs with seed 42 and batch size 128.
+We used SGD with momentum 0.9, an initial learning rate of 0.01 and cosine annealing,
+without training augmentation. Each run started from fresh weights and processed
+1,350,000 training examples. We selected the checkpoint with the highest validation
+accuracy, using lower validation cross-entropy to break ties.
+
+After every epoch, we measured deterministic train_eval and validation metrics with
+Dropout disabled. These cross-entropy values exclude the L2 penalty. All six runs
+used the same Tesla T4, FP32 and PyTorch 2.14.1+cu130. Training time includes the
+validation and train_eval passes after each epoch.
 
 | Configuration | Convolution width | Dropout | SGD weight decay |
 |---|---:|---:|---:|
@@ -29,17 +31,19 @@ Training time includes the per-epoch validation and train_eval passes.
 | No L2 | 1.0 | 0.5 | 0 |
 | Weak L2 | 1.0 | 0.5 | 1e-4 |
 
-Capacity, Dropout and L2 comparisons each share the reference and change one factor.
-Width scaling changes all five convolutional channel counts; the FC hidden dimensions
-remain 1024 and 512, with the FC input adapted to the final feature-map width. Dropout
-is applied after the ReLU of both hidden FC layers. SGD weight decay is applied to all
-trainable parameters, including biases; no additional L2 term is added to the loss.
+Each capacity, Dropout or L2 comparison changes one factor from the same reference.
+Width scaling changes the channel counts in all five convolutional layers. The FC
+hidden dimensions remain 1024 and 512, while the FC input follows the final
+feature-map width. Both hidden FC layers apply Dropout after ReLU. SGD weight decay
+acts on all trainable parameters, including biases, without an additional L2 term
+in the loss.
 
 ## Task 3 results and interpretation
 
-The following results use validation-selected checkpoints. Accuracy is reported as
-a percentage. Time and peak allocated GPU memory use the shared training procedure;
-latency is the shared benchmark's batch-one model-forward measurement.
+Results use the checkpoints selected by validation accuracy. Accuracy is expressed
+as a percentage. Training time and peak allocated GPU memory follow the shared
+training procedure; batch-one latency measures the model forward pass using the
+shared benchmark.
 
 | Configuration | Parameters | Best val % (epoch) | Test % | Train s | Peak MiB | Batch-one ms |
 |---|---:|---:|---:|---:|---:|---:|
@@ -50,74 +54,76 @@ latency is the shared benchmark's batch-one model-forward measurement.
 | No L2 | 6,976,842 | 83.14 (24) | 82.19 | 365.82 | 315.07 | 0.727 |
 | Weak L2 | 6,976,842 | 83.14 (23) | 81.35 | 367.69 | 314.94 | 0.662 |
 
-**Capacity.** Halving convolutional width reduced parameters by 54.25%, measured
-training time by 50.94%, and peak allocated memory by about 49%. Validation accuracy
-fell by 2.16 percentage points and test accuracy by 2.14 points. Both models reached
+Halving convolutional width reduced the parameter count by 54.25%, training time by
+50.94% and peak allocated memory by about 49%. This saving cost 2.16 percentage
+points of validation accuracy and 2.14 points of test accuracy. Both models reached
 approximately 100% deterministic training accuracy, while validation accuracy
-plateaued near 81–83%. The smaller model therefore still had sufficient capacity to
-fit the training set. Its main observed tradeoff was lower generalization accuracy
-with lower training cost, rather than persistent training underfitting. Batch-one
-latency was 0.661 versus 0.647 ms, so parameter reduction did not produce a measured
-single-image speedup on T4.
+plateaued near 81-83%. The smaller model could still fit the training set, so its
+lower validation accuracy points to a generalization gap rather than persistent
+training underfitting. Batch-one latency was 0.661 versus 0.647 ms: the smaller
+parameter count gave no measured single-image speedup on T4.
 
 ![Capacity learning curves](../results/figures/role_b/t3_capacity.png)
 
-**Dropout.** With width and weight decay fixed, increasing Dropout from 0 to 0.25 to
-0.5 raised best validation accuracy from 80.46% to 81.38% to 83.46%. Without Dropout,
-training fit improved faster, the best validation checkpoint occurred at epoch 15,
-and validation cross-entropy subsequently rose while training cross-entropy
-approached zero. Dropout 0.5 delayed training fit and reduced validation
-cross-entropy relative to the other settings. The widening train/validation gap
-supports overfitting as the main problem. All three runs fitted the training set by
-the end, providing no evidence of sustained optimization failure. Their parameter
-counts were identical and measured training costs were similar. Dropout is disabled
-during inference, so the small latency differences are not evidence of a systematic
-Dropout inference cost. The method follows the training-time random unit removal
-described by [Srivastava et al. (2014)](https://jmlr.org/papers/v15/srivastava14a.html).
+With width and weight decay fixed, Dropout 0, 0.25 and 0.5 gave best validation
+accuracies of 80.46%, 81.38% and 83.46%, respectively. The run without Dropout fitted
+the training set faster and reached its best validation accuracy at epoch 15.
+Validation cross-entropy then rose as training cross-entropy approached zero.
+Dropout 0.5 slowed training fit and kept validation cross-entropy lower than the
+other settings. All three runs fitted the training set by the end; the widening
+train/validation gap supports overfitting, with little evidence of sustained
+optimization failure.
+
+Parameter counts were identical and training costs were similar across the Dropout
+settings. Since Dropout is disabled during inference, the small latency differences
+provide no evidence of a systematic Dropout inference cost. We used the
+training-time random unit removal described by
+[Srivastava et al. (2014)](https://jmlr.org/papers/v15/srivastava14a.html).
 
 ![Dropout learning curves](../results/figures/role_b/t3_dropout.png)
 
-**L2 regularization.** Weight decay 5e-4 yielded 83.46% best validation accuracy,
-compared with 83.14% for both 0 and 1e-4. Its validation cross-entropy at the selected
-checkpoint was 0.887, versus 1.065 and 0.991. This suggests that the stronger tested
-decay reduced confident validation errors more clearly than it changed accuracy.
-The test results were 82.66%, 82.19%, and 81.35%, respectively; the weak-decay result
-shows that accuracy did not improve monotonically across these settings. Training
-cost and model size changed little. Under this fixed budget, the reference offered
-the strongest measured accuracy, while half width offered the clearest training
-resource saving.
+With weight decay 5e-4, best validation accuracy was 83.46%, compared with
+83.14% for both 0 and 1e-4. Cross-entropy at the selected checkpoints was 0.887,
+1.065 and 0.991, respectively. The stronger tested decay therefore appeared to
+reduce confident validation errors more clearly than it improved accuracy. Test
+accuracy was 82.66%, 82.19% and 81.35% in the same order, so the accuracy gain was
+not monotonic across decay settings. Model size and training cost changed little.
+The reference gave the best measured accuracy under this budget; half width gave
+the largest training resource saving.
 
 ![L2 learning curves](../results/figures/role_b/t3_l2.png)
 
 ## Task 5 evaluation protocol
 
-Prediction analysis uses the team's frozen `t2_alexnet_cifar_baseline_s42` and
+For prediction analysis, we used the team's frozen `t2_alexnet_cifar_baseline_s42` and
 `t2_resnet18_cifar_baseline_s42` weights, trained by Role A at source revision `b1f9a7e`.
-Each checkpoint's identity, model options and normalization statistics are checked
-before loading, and its SHA256 is recorded. Accuracy, cross-entropy, macro F1,
-per-class precision/recall/F1 and row-normalized confusion matrices are reported.
-Correct and incorrect examples are selected in ascending image-ID order.
+We checked each checkpoint's identity, model options and normalization statistics
+before loading and recorded its SHA256. We measured accuracy, cross-entropy and
+macro F1, with per-class precision/recall/F1 and row-normalized confusion matrices.
+Correct and incorrect examples follow ascending image-ID order.
 
-Untargeted FGSM maximizes the true-label cross-entropy through the differentiable
-normalization step, with epsilon defined in raw [0,1] pixel coordinates:
+Untargeted FGSM takes a gradient-sign step to increase true-label cross-entropy
+through the differentiable normalization step. We defined epsilon in raw [0,1]
+pixel coordinates:
 
 \[
 x_{adv}=\mathrm{clip}_{[0,1]}(x+\epsilon\,\mathrm{sign}(\nabla_x L)).
 \]
 
-The budgets are 0, 2/255, 4/255 and 8/255. Every evaluated perturbation is checked for
-valid pixel range and maximum absolute change at most epsilon (numerical tolerance
-1e-6). The network remains in evaluation mode while input gradients are enabled;
-model parameters are held fixed. Adversarial accuracy uses all evaluation images.
-Attack success rate (ASR) is the fraction of originally correct predictions that
-become incorrect after perturbation. The zero-budget condition checks identity.
+We tested budgets of 0, 2/255, 4/255 and 8/255. Every perturbation had to stay within
+the valid pixel range and change each pixel channel by at most epsilon, with a
+numerical tolerance of 1e-6. The network stayed in evaluation mode with fixed
+parameters while input gradients remained enabled. Adversarial accuracy covers all
+evaluation images. Attack success rate (ASR) counts the fraction of originally
+correct predictions that become incorrect after perturbation. The zero-budget
+condition checks that predictions remain unchanged.
 
-An equal-budget random control uses uniform noise in [-epsilon, epsilon], with a
-separate fixed generator for each image ID. C's frozen rotation, translation and
-Gaussian-noise conditions are also evaluated on the same images and checkpoints.
-These corruptions have different severity definitions from the L-infinity attacks.
-The comparison separates sensitivity to ordinary image changes from sensitivity to
-a model-dependent loss-increasing direction.
+The random control adds uniform noise in [-epsilon, epsilon] under the same budget,
+using a separate fixed generator for each image ID. We also evaluated C's frozen
+rotation, translation and Gaussian-noise conditions on the same images and
+checkpoints. These conditions measure sensitivity to ordinary corruptions, while
+FGSM follows a model-dependent direction that increases loss. Their severity
+definitions differ from the L-infinity attack budget.
 
 ## Task 5 results and interpretation
 
@@ -126,45 +132,44 @@ a model-dependent loss-increasing direction.
 | AlexNetCIFAR | 82.14 | 0.931 | 0.8205 | 63.2 | 73.9 |
 | ResNet18CIFAR | 87.02 | 0.436 | 0.8699 | 74.3 | 79.2 |
 
-ResNet correctly classified 488 more test images. Its recall was higher in all ten
-classes. Cats were the most difficult class for both models, followed by several
-other animal classes, while automobile recall was 91.5% and 94.0%. The confusion
-matrices show substantial cat/dog confusion in both directions. The CIFAR-10 classes
-each contain 1,000 test images, making these row fractions directly comparable.
-The full precision/recall/F1 tables are supplied in `t5_*_classes.csv`.
+ResNet correctly classified 488 more test images than AlexNet and had higher recall
+in all ten classes. Cats were the hardest class for both models, followed by several
+other animal classes. Automobile recall was 91.5% for AlexNet and 94.0% for ResNet.
+The confusion matrices show frequent cat/dog errors in both directions.
+Each CIFAR-10 test class contains 1,000 images, so the row fractions are directly
+comparable. Full precision/recall/F1 results are in `t5_*_classes.csv`.
 
 ![AlexNet confusion matrix](../results/figures/role_b/t5_t2_alexnet_cifar_baseline_s42_confusion.png)
 
 ![ResNet confusion matrix](../results/figures/role_b/t5_t2_resnet18_cifar_baseline_s42_confusion.png)
 
-The fixed example grids show both clear successes and confident mistakes. For
-example, test image 24 is a dog predicted as deer by both models, with confidence
-0.95 for AlexNet and 0.99 for ResNet. Image 35 is a bird predicted as truck by AlexNet
-and ship by ResNet. At 32×32 resolution, fine object detail is sparse; clutter,
-viewpoint and shared animal shapes are plausible contributors visible in the
-grids. These observations describe the examples and do not establish a causal
-feature explanation. The grids include the first five correct and incorrect
-predictions rather than a manually selected set of dramatic failures.
+The example grids include clear successes alongside confident mistakes. Both models
+predicted deer for test image 24, a dog, with confidence 0.95 for AlexNet and 0.99
+for ResNet. For image 35, a bird, AlexNet predicted truck and ResNet predicted ship.
+Fine object detail is limited at 32×32 resolution. Clutter, viewpoint and similar
+animal shapes are plausible contributors in these examples, although we did not
+test those explanations with feature attribution. The grids use the first five
+correct and incorrect predictions by ID to avoid manually choosing striking errors.
 
 ![AlexNet prediction examples](../results/figures/role_b/t5_t2_alexnet_cifar_baseline_s42_predictions.png)
 
 ![ResNet prediction examples](../results/figures/role_b/t5_t2_resnet18_cifar_baseline_s42_predictions.png)
 
-The original baseline histories show near-perfect final training fit for both
-models, with a persistent validation gap. AlexNet validation cross-entropy rises
-after its early minimum even while validation accuracy improves slightly, indicating
-increasingly confident errors. ResNet reaches a higher validation plateau and lower
-validation cross-entropy after its middle-epoch fluctuations. Both curves support
-overfitting; neither ends with poor training fit. These are Role A's actual training
-histories for the checkpoints evaluated here, rather than histories of the new
-Task 3 reference run.
+Role A's original training histories show near-perfect final training fit for both
+evaluated checkpoints, with a persistent validation gap. AlexNet's validation
+cross-entropy rises after its early minimum even as validation accuracy improves
+slightly, indicating more confident errors. After fluctuations in the middle
+epochs, ResNet reaches a higher validation plateau and lower validation
+cross-entropy. Both curves show overfitting despite good final training fit. These
+histories belong to the evaluated checkpoints; the new Task 3 reference is a separate
+training run.
 
 ![Original baseline learning diagnostics](../results/figures/role_b/t5_training_diagnostics.png)
 
 ### Optimized perturbations and random controls
 
-Every row below evaluates all 10,000 official test images. ASR uses 8,214 originally
-correct AlexNet predictions or 8,702 originally correct ResNet predictions.
+All conditions cover the 10,000 official test images. ASR uses the 8,214 originally
+correct AlexNet predictions or the 8,702 originally correct ResNet predictions.
 
 | Model | Epsilon | FGSM accuracy % | FGSM ASR % | Random accuracy % | Random ASR % |
 |---|---:|---:|---:|---:|---:|
@@ -179,45 +184,45 @@ correct AlexNet predictions or 8,702 originally correct ResNet predictions.
 
 ![FGSM and equal-budget random controls](../results/figures/role_b/t5_fgsm_vs_random.png)
 
-At 8/255, FGSM reduced AlexNet accuracy by 63.13 percentage points and ResNet by
-82.24 points. Equal-budget random noise reduced accuracy by only 0.47 and 0.95
-points. The difference demonstrates strong sensitivity to a gradient-directed
-perturbation under the stated L-infinity budget. Uniform random noise samples the
-interior of the permitted box, whereas FGSM usually moves pixels to its boundary;
-the control matches the maximum permitted change, rather than the complete
-distribution of perturbation magnitudes.
+At 8/255, FGSM reduced AlexNet accuracy by 63.13 percentage points and ResNet accuracy
+by 82.24 points. Random noise under the same budget caused drops of 0.47 and 0.95
+points. Both checkpoints were therefore much more sensitive to the gradient-directed
+perturbation. The budget matches the maximum permitted change in each condition.
+The perturbation magnitudes still have different distributions: uniform noise
+samples the interior of the permitted box, while FGSM usually moves pixels to its
+boundary.
 
-ResNet's higher clean accuracy therefore did not translate into stronger resistance
-to this attack. This is a comparison of the two frozen checkpoints under untargeted
-white-box FGSM, rather than a general robustness ranking of their architectures.
-Random accuracy can remain unchanged while ASR is positive because some originally
-incorrect images also become correct.
+ResNet had higher clean accuracy but lower resistance to this untargeted white-box
+FGSM attack. That result applies to the two frozen checkpoints and this attack; it
+does not establish a general robustness ranking of the architectures. Random-noise
+accuracy can stay unchanged while ASR is positive because some initially incorrect
+predictions also become correct.
 
 At epsilon 8/255, image 0 changes from cat to dog for AlexNet and from cat to frog
-for ResNet. Image 1 changes from ship to automobile for both. The first retained
-failure is image 11 for AlexNet and image 23 for ResNet: each remains truck. The
-panels show the original image, an amplified perturbation, and the actual attacked
-image. The middle panel uses `clip(0.5 + 8*delta, 0, 1)` solely to make the perturbation
-visible; the real input change remains at most 8/255 per channel.
+for ResNet. Image 1 changes from ship to automobile for both models. FGSM also fails
+on some images: the first retained failures are image 11 for AlexNet and image 23
+for ResNet, both of which remain truck. Each row shows the original image, an
+amplified perturbation and the actual attacked image. The middle panel displays
+`clip(0.5 + 8*delta, 0, 1)` to make the perturbation visible. The input fed to the
+model still changes by at most 8/255 per channel.
 
 ![AlexNet attack successes and failure](../results/figures/role_b/t5_t2_alexnet_cifar_baseline_s42_fgsm.png)
 
 ![ResNet attack successes and failure](../results/figures/role_b/t5_t2_resnet18_cifar_baseline_s42_fgsm.png)
 
-FGSM is a single gradient-sign step following
-[Goodfellow, Shlens and Szegedy](https://arxiv.org/abs/1412.6572). A failed FGSM attempt
-shows failure of this particular step; it does not certify that an image is robust
-within the permitted region. Iterative attacks with restarts would provide a
-stronger follow-up evaluation. Rotation, translation and Gaussian-noise results
-are retained separately in each Task 5 JSON using C's frozen corruption settings
-and the same Role A checkpoints; their severity parameters are not equivalent to
-the L-infinity budget.
+FGSM uses a single gradient-sign step, following
+[Goodfellow, Shlens and Szegedy](https://arxiv.org/abs/1412.6572). Remaining correct
+after that step does not certify robustness throughout the permitted region.
+Iterative attacks with restarts would give a stronger follow-up evaluation. Each
+Task 5 JSON also stores the separate rotation, translation and Gaussian-noise
+results for C's frozen settings and the same Role A checkpoints. Those severity
+parameters are not equivalent to the L-infinity budget.
 
 ### Paired comparison with C's frozen corruptions
 
-These measurements reuse C's exact per-image corruption recipe on the same 10,000
-images and the same Role A weights used for FGSM. They do not reuse metrics from
-C's independently trained checkpoints.
+We applied C's exact per-image corruption recipe to the same 10,000 images and Role
+A weights used for FGSM. We measured these results directly on those weights;
+C's independently trained checkpoints have separate metrics.
 
 | Evaluation condition | AlexNet accuracy % | ResNet accuracy % |
 |---|---:|---:|
@@ -228,50 +233,50 @@ C's independently trained checkpoints.
 | Uniform random L-infinity noise, epsilon 8/255 | 81.67 | 86.07 |
 | FGSM, epsilon 8/255 | 19.01 | 4.78 |
 
-ResNet retained higher accuracy under the tested geometric transformations, while
-AlexNet retained higher accuracy under Gaussian noise. Thus ordinary-corruption
-performance also depends on the corruption family. The Gaussian condition has a
-different magnitude distribution and a larger standard deviation than the uniform
-control, so their numerical differences combine direction, distribution and
-severity effects. The same-budget uniform control provides the closer comparison
-for interpreting FGSM's model-dependent direction.
+ResNet retained higher accuracy under the geometric transformations, whereas AlexNet
+retained higher accuracy under Gaussian noise. Their ranking therefore depends on
+the corruption family. Gaussian noise has a different magnitude distribution and a
+larger standard deviation than the uniform control, so their numerical differences
+reflect direction, distribution and severity together. The uniform control
+under the same budget is the closer comparison for assessing FGSM's model-dependent
+direction.
 
 ## Implications for the combined report
 
-For this AlexNet training budget, the full-width reference with Dropout 0.5 and
-weight decay 5e-4 gave the highest measured validation and test accuracy. The
-half-width model is a practical option when training time or memory is the binding
-constraint, with an observed 2.14-point test accuracy cost. The frozen ResNet is the
-stronger clean classifier in Task 5, but its much lower FGSM accuracy shows why a
-deployment recommendation must state its threat model. Role C can combine these
-measurements with augmentation and cost results in Task 6, comparing timing only
-when hardware and benchmark procedures match.
+Under the tested AlexNet training budget, the full-width reference with Dropout 0.5
+and weight decay 5e-4 gave the highest validation and test accuracy. Halving width
+is useful when training time or memory is limited, at a measured cost of 2.14 test
+accuracy points. For Task 5, the frozen ResNet is the better clean classifier but
+has much lower FGSM accuracy. A deployment choice therefore needs to specify the
+threat model. Role C can combine these measurements with the augmentation and cost
+results in Task 6, using matching hardware and benchmark procedures for timing
+comparisons.
 
-All comparisons use one seed and a 30-epoch schedule. Small accuracy differences,
-especially the L2 results, require repeated seeds to assess stability. The selected
-checkpoint maximizes validation accuracy, which can differ from the epoch minimizing
-cross-entropy. Inference measurements use 10 warmups and 50 measured forwards on
-resident tensors and exclude preprocessing, transfers and data loading. Repeated
-timing sessions would be needed to interpret small latency differences. A useful
-next experiment is a paired multi-seed repeat of the reference and half-width
-configurations, followed by iterative adversarial evaluation of the fixed models.
+These comparisons use one seed and a 30-epoch schedule. Repeating them across seeds
+would help establish whether the small accuracy differences, especially for L2,
+are stable. Checkpoint selection follows validation accuracy, so the selected
+epoch can differ from the one with the lowest cross-entropy. The inference
+benchmark uses 10 warmups and 50 measured forwards on resident tensors, excluding
+preprocessing, transfers and data loading. Small latency differences would need
+repeated timing sessions. We would next repeat the reference and half-width
+comparison with paired seeds, then evaluate the frozen models with iterative
+adversarial attacks.
 
 ## Validation and reproducibility
 
-The repository's 34 unit tests, including five Task 5/control-design tests, passed
-locally. The five B tests and a separate 128-training/64-validation-image smoke test
-also passed in Colab T4 before formal training. Source/config hashes, checkpoint
-hashes, original image IDs, environment metadata and complete learning histories
-are retained alongside the measurements. Source code is supplied in Python modules;
-the executed notebook calls these modules and displays their outputs.
+All 34 repository unit tests passed locally, including the five Task 5/control-design
+tests. Before formal training, the five B tests and a separate smoke test with
+128 training and 64 validation images also passed on Colab T4. The saved artifacts
+include source/config and checkpoint hashes, original image IDs, environment
+metadata and complete learning histories. The executed notebook calls the supplied
+Python modules and displays their outputs.
 
-The execution used the repository base revision
-`d2eec8535fe105becf4ba035ce5fb762c57a687c` plus the new Role B source snapshot.
-The base revision alone does not contain the new modules: per-file SHA256 values
-in every result identify the exact executed source. A's checkpoint source revision
-is separately recorded as `b1f9a7e`. The T4 reevaluation of A's ResNet produced
-87.02% clean accuracy, compared with 87.01% in its earlier result file; the current
-prediction arrays and metrics consistently use 87.02%.
+The run used base revision `d2eec8535fe105becf4ba035ce5fb762c57a687c` with the new Role
+B source snapshot. Each result records per-file SHA256 values to identify the exact
+source, since the new modules are absent from the base revision. A's checkpoints
+retain their separate source revision, `b1f9a7e`. Reevaluating A's ResNet on T4 gave
+87.02% clean accuracy, compared with 87.01% in the earlier result file. All current
+prediction arrays and metrics use 87.02%.
 
 ## Dataset, implementation and method references
 
