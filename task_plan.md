@@ -58,7 +58,7 @@
 - [x] 生成 `lab1/results/submission_summary.csv` 汇总 15 份训练/冻结权重评测记录，分别标明训练与评测硬件；保留 A 原有的两行 `summary.csv`。
 - [x] 在 Colab CPU 顺序执行统一 `lab1_submission.ipynb` 的 9 个代码单元，保存 24 幅图和完整源码附录；核对 13 个训练历史、41 个预测条件及 CPU 架构前向。沿用已完成的正式 GPU 实验，不把展示重执行称为重新训练。
 - [x] A 的原始结果展示本已在 Colab CPU 执行并保存 5 个单元输出；保留 RTX 训练/测速来源。
-- [x] 完成统一英文 `lab1/docs/lab1_report.pdf`（18 页）与 Markdown，覆盖 Task 1–6、Challenge 2、引用和复现说明。34 项现有单元测试通过；机器检查记录见 `submission_validation.json`。
+- [x] 完成统一英文报告，覆盖 Task 1–6、Challenge 2、引用和复现说明；论文排版修订版为 `lab1_report_paper.pdf`（27 页）及可编辑 Word，原 18 页稿保留。34 项现有单元测试通过；实验与论文格式检查分别见 `submission_validation.json`、`paper_submission_validation.json`。
 
 ---
 

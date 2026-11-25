@@ -101,7 +101,7 @@ def source_archive():
         paths.extend(p for p in (ROOT / "lab1" / directory).rglob("*")
                      if p.is_file() and "__pycache__" not in p.parts
                      and "smoke_role_b" not in p.parts
-                     and p.suffix in {".py", ".json", ".csv", ".npz", ".png", ".md", ".tex", ".pdf"})
+                     and p.suffix in {".py", ".json", ".csv", ".npz", ".png", ".md", ".tex", ".pdf", ".bib", ".csl"})
     paths.extend([ROOT / "AGENTS.md", ROOT / ".gitattributes", ROOT / "Lab Assignment 1.docx.md",
                   ROOT / "lab1/requirements.txt"])
     paths.extend(ROOT / "lab1/notebooks" / name for name in [

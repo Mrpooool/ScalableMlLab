@@ -2,6 +2,13 @@
 
 更新：2026-11-25。A/B/C 已整合为完整提交 Notebook 和单份英文报告，提交分支为 `feat/lab1-submission`；文件已准备，课程平台尚未上传。
 
+## 2026-11-25：报告学术排版修订
+
+- 按用户要求使用 nature-paper2word 的 `en-nature` 预设及 Nature CSL，生成 [论文版 PDF](lab1/docs/lab1_report_paper.pdf) 和 [可编辑 Word](lab1/docs/lab1_report_paper.docx)；原 18 页统稿保留追溯。
+- 新版含摘要、关键词、统一编号标题、12 张三线表、20 幅编号图、Word 原生 FGSM 公式及 10 条自动生成的文献。原 71 行表格内容逐行一致，Notebook 与模型结果未改动。
+- Word 通过引擎格式审计与数值检查；PDF 经 Pandoc/Tectonic 编译并检查 27 页。Word 后台导出未完成，所以 Word 分页仍建议在应用中预览；PDF 已独立核查图表、公式及参考文献。
+- 新提交包为 `lab1_submission_paper.zip`，其中主报告文件名仍为 `lab1_report.pdf`，另附 Word、BibTeX、CSL、格式说明和更新的验收记录。
+
 ## 2026-11-25：团队提交整合与真实输出核对
 
 - 逐条核对用户提供的原始作业要求，覆盖 Task 1-6 和已尝试的 Challenge 2；Challenge 1 为 optional，未尝试。
