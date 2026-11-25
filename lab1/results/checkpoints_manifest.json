@@ -197,7 +197,9 @@
       "result_file": "lab1/results/t3_alexnet_reference_s42.json",
       "drive_file_id": "1ICv-JIfYtKG-D7SkSBUsqME_4mOmpR0e",
       "drive_url": "https://drive.google.com/file/d/1ICv-JIfYtKG-D7SkSBUsqME_4mOmpR0e/view?usp=drivesdk",
-      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint"
+      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint",
+      "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+      "reproduction_commit_note": "Contains the complete B implementation; git_commit and source SHA256 retain the historical training provenance."
     },
     {
       "exp_id": "t3_alexnet_width_half_s42",
@@ -261,7 +263,9 @@
       "result_file": "lab1/results/t3_alexnet_width_half_s42.json",
       "drive_file_id": "1WG-wv9Nan0wK1EEGFwj_3LrxsTBgVpdD",
       "drive_url": "https://drive.google.com/file/d/1WG-wv9Nan0wK1EEGFwj_3LrxsTBgVpdD/view?usp=drivesdk",
-      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint"
+      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint",
+      "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+      "reproduction_commit_note": "Contains the complete B implementation; git_commit and source SHA256 retain the historical training provenance."
     },
     {
       "exp_id": "t3_alexnet_dropout_zero_s42",
@@ -325,7 +329,9 @@
       "result_file": "lab1/results/t3_alexnet_dropout_zero_s42.json",
       "drive_file_id": "1As-8QYdGT6cPd-qFLzV8cX1bKmQ9cSfN",
       "drive_url": "https://drive.google.com/file/d/1As-8QYdGT6cPd-qFLzV8cX1bKmQ9cSfN/view?usp=drivesdk",
-      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint"
+      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint",
+      "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+      "reproduction_commit_note": "Contains the complete B implementation; git_commit and source SHA256 retain the historical training provenance."
     },
     {
       "exp_id": "t3_alexnet_dropout_quarter_s42",
@@ -389,7 +395,9 @@
       "result_file": "lab1/results/t3_alexnet_dropout_quarter_s42.json",
       "drive_file_id": "1iw7UNqnwnYnfXBqvkEBInxtf_a11nNDI",
       "drive_url": "https://drive.google.com/file/d/1iw7UNqnwnYnfXBqvkEBInxtf_a11nNDI/view?usp=drivesdk",
-      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint"
+      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint",
+      "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+      "reproduction_commit_note": "Contains the complete B implementation; git_commit and source SHA256 retain the historical training provenance."
     },
     {
       "exp_id": "t3_alexnet_l2_zero_s42",
@@ -453,7 +461,9 @@
       "result_file": "lab1/results/t3_alexnet_l2_zero_s42.json",
       "drive_file_id": "1sRGXvkNzVYqVv6o4G0q4-Slomn6Ahwmn",
       "drive_url": "https://drive.google.com/file/d/1sRGXvkNzVYqVv6o4G0q4-Slomn6Ahwmn/view?usp=drivesdk",
-      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint"
+      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint",
+      "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+      "reproduction_commit_note": "Contains the complete B implementation; git_commit and source SHA256 retain the historical training provenance."
     },
     {
       "exp_id": "t3_alexnet_l2_weak_s42",
@@ -517,7 +527,9 @@
       "result_file": "lab1/results/t3_alexnet_l2_weak_s42.json",
       "drive_file_id": "1ti3Nyuaihw1hcvKaeCBuj7s5VXTzDHiH",
       "drive_url": "https://drive.google.com/file/d/1ti3Nyuaihw1hcvKaeCBuj7s5VXTzDHiH/view?usp=drivesdk",
-      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint"
+      "verification": "Downloaded shared Drive file; SHA256 matched executed checkpoint",
+      "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+      "reproduction_commit_note": "Contains the complete B implementation; git_commit and source SHA256 retain the historical training provenance."
     }
   ]
 }

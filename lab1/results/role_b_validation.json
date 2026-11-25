@@ -21,5 +21,15 @@
   "shared_weights": {
     "files": 6,
     "readback_sha256_matched": 6
+  },
+  "self_check_2026_11_25": {
+    "unit_tests_passed": 34,
+    "unit_test_seconds": 46.773,
+    "training_artifact_audit": "passed",
+    "actual_cifar_label_and_split_audit": "passed",
+    "probability_archives_checked": 18,
+    "macro_f1_and_confusion_recomputed": "passed",
+    "reproduction_commit": "8b3a99764730fd1c92aa9fd5fb7f7255f87ca143",
+    "formal_gpu_training_repeated": false
   }
 }
