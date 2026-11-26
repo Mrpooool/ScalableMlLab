@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "model": "alexnet_cifar",
+  "seed": 42,
+  "experiments": [
+    {"name": "reference", "width_mult": 1.0, "dropout": 0.5, "weight_decay": 0.0005},
+    {"name": "width_half", "width_mult": 0.5, "dropout": 0.5, "weight_decay": 0.0005},
+    {"name": "dropout_zero", "width_mult": 1.0, "dropout": 0.0, "weight_decay": 0.0005},
+    {"name": "dropout_quarter", "width_mult": 1.0, "dropout": 0.25, "weight_decay": 0.0005},
+    {"name": "l2_zero", "width_mult": 1.0, "dropout": 0.5, "weight_decay": 0.0},
+    {"name": "l2_weak", "width_mult": 1.0, "dropout": 0.5, "weight_decay": 0.0001}
+  ],
+  "attack": {
+    "method": "fgsm",
+    "targeted": false,
+    "norm": "linf",
+    "epsilons": [0.0, 0.00784313725490196, 0.01568627450980392, 0.03137254901960784],
+    "random_seed": 2223
+  },
+  "prediction_models": [
+    "t2_alexnet_cifar_baseline_s42",
+    "t2_resnet18_cifar_baseline_s42"
+  ]
+}
